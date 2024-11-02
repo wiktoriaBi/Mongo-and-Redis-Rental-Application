@@ -14,8 +14,6 @@ import org.example.utils.consts.DatabaseConstants;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
-@Entity
-@Table (name = DatabaseConstants.RENT_TABLE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
@@ -27,20 +25,8 @@ public class Rent extends AbstractEntity {
     @Column(name = DatabaseConstants.RENT_END_TIME, nullable = false)
     private LocalDateTime endTime;
 
-    @ManyToOne
-    @JoinColumn(
-            name = DatabaseConstants.RENT_CLIENT_ID,
-            referencedColumnName = DatabaseConstants.PK,
-            foreignKey = @ForeignKey(name = DatabaseConstants.RENT_CLIENT_ID_FK)
-    )
     private Client client;
 
-    @ManyToOne
-    @JoinColumn(
-            name = DatabaseConstants.RENT_VEHICLE_ID,
-            referencedColumnName = DatabaseConstants.PK,
-            foreignKey = @ForeignKey(name = DatabaseConstants.RENT_VEHICLE_ID_FK)
-    )
     private Vehicle vehicle;
 
     @Column(name = DatabaseConstants.RENT_RENT_COST, nullable = false)

@@ -7,16 +7,10 @@ import org.example.utils.consts.DatabaseConstants;
 import java.io.Serializable;
 import java.util.UUID;
 
-@MappedSuperclass
 @Getter
 public class AbstractEntity implements Serializable {
 
-    @Id
-    @Column(name = DatabaseConstants.PK)
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = DatabaseConstants.ID)
     private UUID id;
 
-    @Version
-    @Column(name = DatabaseConstants.VERSION)
-    private Long version;
 }

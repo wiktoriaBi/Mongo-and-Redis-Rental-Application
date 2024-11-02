@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@DiscriminatorValue(value = "gold")
 @NoArgsConstructor
 @Setter @Getter
 public class Gold extends ClientType {

@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.utils.consts.DatabaseConstants;
 
-@Entity
-@Table (name = DatabaseConstants.VEHICLE_TABLE)
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter @Getter

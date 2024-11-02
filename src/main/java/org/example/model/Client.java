@@ -9,8 +9,6 @@ import org.example.utils.consts.DatabaseConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table
 @NoArgsConstructor
 @Getter @Setter
 public class Client extends AbstractEntity {
@@ -27,10 +25,6 @@ public class Client extends AbstractEntity {
     @Embedded
     private Address address;
 
-    @ManyToOne(optional = false)
-    @JoinColumn( name = DatabaseConstants.CLIENT_CLIENT_TYPE_ID,
-    referencedColumnName = DatabaseConstants.PK,
-    foreignKey = @ForeignKey(name = DatabaseConstants.CLIENT_CLIENT_TYPE_ID_FK))
     private ClientType clientType;
 
     @OneToMany(mappedBy = "client")

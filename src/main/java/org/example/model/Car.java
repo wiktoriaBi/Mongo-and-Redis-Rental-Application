@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.utils.consts.DatabaseConstants;
 
-@Entity
-@Table (name = DatabaseConstants.CAR_TABLE)
 @Getter @Setter
 @NoArgsConstructor
 public class Car extends MotorVehicle{

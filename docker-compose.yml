@@ -12,7 +12,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=rental
+      - MONGO_INITDB_DATABASE=rentacar
     command: --config /etc/mongod.conf --port 27017
     healthcheck:
       test: ["CMD", mongosh, "--eval", "db.adminCommand('ping')"]
@@ -34,7 +34,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=rental
+      - MONGO_INITDB_DATABASE=rentacar
     command: --config /etc/mongod.conf --port 27017
     healthcheck:
       test: ["CMD", mongosh, "--eval", "db.adminCommand('ping')"]
@@ -56,7 +56,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=rental
+      - MONGO_INITDB_DATABASE=rentacar
     command: --config /etc/mongod.conf --port 27017
     healthcheck:
       test: ["CMD", mongosh, "--eval", "db.adminCommand('ping')"]
@@ -99,6 +99,7 @@ services:
 networks:
   mongonet: {}
 
+
 volumes:
   mongo1_data:
   mongo2_data:
@@ -106,3 +107,4 @@ volumes:
   mongo1_config:
   mongo2_config:
   mongo3_config:
+

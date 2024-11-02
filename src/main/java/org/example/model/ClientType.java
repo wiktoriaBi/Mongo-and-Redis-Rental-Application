@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.utils.consts.DatabaseConstants;
 
-@Entity
-@Table(name = DatabaseConstants.CLIENT_TYPE_TABLE,
-        uniqueConstraints = @UniqueConstraint(columnNames = DatabaseConstants.CLIENT_TYPE_TYPE))
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = DatabaseConstants.CLIENT_TYPE_TYPE, discriminatorType = DiscriminatorType.STRING)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
