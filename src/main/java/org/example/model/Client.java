@@ -17,7 +17,6 @@ public class Client extends AbstractEntity {
 
     private String lastName;
 
-    @Column(name = DatabaseConstants.CLIENT_EMAIL, unique = true)
     private String email;
 
     private ClientType clientType;

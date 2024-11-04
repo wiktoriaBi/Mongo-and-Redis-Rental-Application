@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Getter
-public class AbstractEntity implements Serializable {
+public abstract class AbstractEntity implements Serializable {
 
-    @Column(name = DatabaseConstants.ID)
     private UUID id;
 
     public AbstractEntity(UUID id) {

@@ -10,8 +10,8 @@ import java.util.UUID;
 @Getter @Setter
 public class Car extends MotorVehicle{
 
-    public Car(String plateNumber, Double basePrice, Integer engine_displacement) {
-        super(plateNumber, basePrice, engine_displacement);
+    public Car(UUID id, String plateNumber, Double basePrice, Integer engine_displacement) {
+        super(id, plateNumber, basePrice, engine_displacement);
     }
 
 }

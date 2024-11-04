@@ -16,7 +16,7 @@ public class DatabaseConstants {
     //ClientEmbeddedMgd
 
     public static final String CLIENT_EMBEDDED_ACCOUNT = "account";
-    public static final String CLIENT_EMBEDDED_CLIENT= "client";
+    public static final String CLIENT= "client";
 
     // Vehicle
 

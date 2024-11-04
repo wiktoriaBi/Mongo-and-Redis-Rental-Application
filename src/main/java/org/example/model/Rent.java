@@ -33,15 +33,6 @@ public class Rent extends AbstractEntity {
 
     private boolean active;
 
-    public Rent(LocalDateTime beginTime, LocalDateTime endTime, Client client, Vehicle vehicle) {
-        this.beginTime = beginTime;
-        this.endTime = endTime;
-        this.client = client;
-        this.vehicle = vehicle;
-        this.active = true;
-        this.rentCost = ChronoUnit.HOURS.between(endTime, beginTime) * vehicle.getBasePrice();
-    }
-
     public Rent(UUID id, LocalDateTime beginTime, LocalDateTime endTime, Client client, Vehicle vehicle, boolean active) {
         super(id);
         this.beginTime = beginTime;

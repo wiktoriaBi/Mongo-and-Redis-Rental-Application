@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter @Setter
 public class ClientEmbeddedMgd extends AbstractEntityMgd {
 
-    @BsonProperty(DatabaseConstants.CLIENT_EMBEDDED_CLIENT)
+    @BsonProperty(DatabaseConstants.CLIENT)
     private ClientMgd clientMgd;
 
     @BsonProperty(DatabaseConstants.CLIENT_EMBEDDED_ACCOUNT)
@@ -20,7 +20,7 @@ public class ClientEmbeddedMgd extends AbstractEntityMgd {
     @BsonCreator
     public ClientEmbeddedMgd(
             @BsonProperty(DatabaseConstants.ID) UUID entityId,
-            @BsonProperty(DatabaseConstants.CLIENT_EMBEDDED_CLIENT) ClientMgd clientMgd,
+            @BsonProperty(DatabaseConstants.CLIENT) ClientMgd clientMgd,
             @BsonProperty(DatabaseConstants.CLIENT_EMBEDDED_ACCOUNT) AccountMgd accountMgd) {
         super(entityId);
         this.clientMgd = clientMgd;

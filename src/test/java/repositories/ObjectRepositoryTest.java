@@ -9,8 +9,6 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.UuidCodec;
-import org.bson.codecs.UuidCodecProvider;
-import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
@@ -19,18 +17,14 @@ import org.bson.conversions.Bson;
 import org.example.mgd.AccountMgd;
 import org.example.mgd.ClientEmbeddedMgd;
 import org.example.mgd.ClientMgd;
-import org.example.model.Address;
 import org.example.utils.consts.DatabaseConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.UniqueId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 class ObjectRepositoryTest {
 
 

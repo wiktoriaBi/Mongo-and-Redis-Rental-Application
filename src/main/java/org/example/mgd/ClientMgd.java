@@ -1,13 +1,10 @@
 package org.example.mgd;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.example.model.Address;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;

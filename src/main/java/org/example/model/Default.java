@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.model.ClientType;
 
-@NoArgsConstructor
+import java.util.UUID;
+
 @Getter @Setter
 public class Default extends ClientType {
 
-    public Default(Double discount, Integer maxVehicles) {
-        super(discount, maxVehicles);
+    public Default(UUID id, Double discount, Integer maxVehicles) {
+        super(id, discount, maxVehicles);
     }
 }

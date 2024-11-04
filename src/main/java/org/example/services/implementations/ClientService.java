@@ -2,7 +2,6 @@ package org.example.services.implementations;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.example.model.Address;
 import org.example.model.Client;
 import org.example.model.ClientType;
 import org.example.repositories.interfaces.IClientRepository;
