@@ -13,4 +13,7 @@ public class AbstractEntity implements Serializable {
     @Column(name = DatabaseConstants.ID)
     private UUID id;
 
+    public AbstractEntity(UUID id) {
+        this.id = id;
+    }
 }

@@ -11,12 +11,14 @@ import lombok.Setter;
 import org.example.model.MotorVehicle;
 import org.example.utils.consts.DatabaseConstants;
 
+import java.util.UUID;
+
 @Getter @Setter
 @NoArgsConstructor
 
 public class Moped extends MotorVehicle {
 
-    public Moped(String plateNumber, Double basePrice, Integer engine_displacement) {
-        super(plateNumber, basePrice, engine_displacement);
+    public Moped(UUID uuid, String plateNumber, Double basePrice, Integer engine_displacement) {
+        super(uuid, plateNumber, basePrice, engine_displacement);
     }
 }

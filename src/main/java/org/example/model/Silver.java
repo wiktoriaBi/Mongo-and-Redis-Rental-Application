@@ -6,11 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.model.ClientType;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @Setter @Getter
 public class Silver extends ClientType {
 
-    public Silver(Double discount, Integer maxVehicles) {
-        super(discount, maxVehicles);
+    public Silver(UUID id, Double discount, Integer maxVehicles) {
+        super(id, discount, maxVehicles);
     }
 }

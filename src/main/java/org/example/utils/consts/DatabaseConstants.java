@@ -20,7 +20,8 @@ public class DatabaseConstants {
 
     // Vehicle
 
-    public static final String VEHICLE_TABLE= "vehicle";
+    public static final String BSON_DISCRIMINATOR_KEY = "_clazz";
+    public static final String VEHICLE= "vehicle";
     public static final String VEHICLE_PLATE_NUMBER = "plate_number";
     public static final String VEHICLE_BASE_PRICE = "base_price";
     public static final String VEHICLE_ARCHIVE = "archive";
@@ -32,7 +33,7 @@ public class DatabaseConstants {
 
     // Moped
 
-    public static final String MOPED_TABLE = "moped";
+    public static final String MOPED_DISCRIMINATOR = "moped";
     public static final String MOPED_MOTOR_VEHICLE_ID_FK = "moped_motor_vehicle_id_fk";
 
     //Car
@@ -40,7 +41,7 @@ public class DatabaseConstants {
     public static final String CAR_TABLE = "car";
 
     // Bicycle
-    public static final String BICYCLE_TABLE = "bicycle";
+    public static final String BICYCLE_DISCRIMINATOR = "bicycle";
 
     public static final String BICYCLE_PEDAL_NUMBER = "pedal_number";
 
@@ -74,6 +75,8 @@ public class DatabaseConstants {
     public static final String CLIENT_LAST_NAME = "last_name";
     public static final String CLIENT_EMAIL = "email";
     public static final String CLIENT_ADDRESS = "address";
+    public static final String CLIENT_ACTIVE_RENTS = "active_rents";
+
 
 
 
@@ -86,10 +89,6 @@ public class DatabaseConstants {
     public static final String RENT_TABLE = "rent";
     public static final String RENT_BEGIN_TIME = "begin_time";
     public static final String RENT_END_TIME = "end_time";
-    public static final String RENT_CLIENT_ID = "client_id";
-    public static final String RENT_CLIENT_ID_FK = "rent_client_id_fk";
-    public static final String RENT_VEHICLE_ID = "vehicle_id";
-    public static final String RENT_VEHICLE_ID_FK = "rent_vehicle_id_fk";
 
     public static final String RENT_RENT_COST = "rent_cost";
     public static final String RENT_ACTIVE = "active";

@@ -6,6 +6,7 @@ import com.mongodb.MongoCommandException;
 import com.mongodb.MongoCredential;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.UuidCodec;
 import org.bson.codecs.UuidCodecProvider;
@@ -14,6 +15,7 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.conversions.Bson;
 import org.example.mgd.AccountMgd;
 import org.example.mgd.ClientEmbeddedMgd;
 import org.example.mgd.ClientMgd;
@@ -52,7 +54,6 @@ class ObjectRepositoryTest {
 
         MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
                 .applyConnectionString(connectionString)
-                .uuidRepresentation(UuidRepresentation.STANDARD)
                 .codecRegistry(
                         CodecRegistries.fromRegistries(
                                 CodecRegistries.fromCodecs(new UuidCodec(UuidRepresentation.STANDARD)),
@@ -94,8 +95,6 @@ class ObjectRepositoryTest {
             System.out.println(clientMgd1.toString());
         }
 
-
-
     }
 
 
@@ -105,6 +104,14 @@ class ObjectRepositoryTest {
 
         return clients.aggregate(List.of(
                 Aggregates.replaceRoot("$client")), ClientMgd.class).into(new ArrayList<>());
+    }
+
+    private void deleteById(UUID clientId, MongoDatabase database ) {
+
+        Bson filter = Filters.eq(DatabaseConstants.ID, clientId);
+        ClientMgd deletedClient = database
+                .getCollection("clientsembedded", ClientMgd.class).findOneAndDelete(filter);
+
     }
 
   

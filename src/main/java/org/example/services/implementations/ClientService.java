@@ -18,7 +18,7 @@ public class ClientService {
     private final IClientRepository clientRepository;
     private final IClientTypeRepository clientTypeRepository;
 
-    public Client addClient(String firstName, String lastName, String email, Address address, UUID clientTypeId) {
+    public Client addClient(String firstName, String lastName, String email,UUID clientTypeId, String cityName, String streetName, String streetNumber) {
         ClientType clientType = null;
         try {
             clientType = clientTypeRepository.findById(clientTypeId);
@@ -28,7 +28,7 @@ public class ClientService {
         } catch (Exception e) {
             em.getTransaction().rollback();
         }
-        Client client = new Client(firstName, lastName, email, address, clientType);
+        Client client = new Client(UUID.randomUUID(), firstName, lastName, email, clientType, cityName, streetName, streetNumber);
         return clientRepository.save(client);
     }
 

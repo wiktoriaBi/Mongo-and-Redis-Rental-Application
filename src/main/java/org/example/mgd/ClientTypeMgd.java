@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.mgd;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,14 +9,14 @@ import org.example.utils.consts.DatabaseConstants;
 import java.util.UUID;
 
 @Getter @Setter
-public class ClientType extends AbstractEntity {
+public class ClientTypeMgd extends AbstractEntityMgd {
 
     @BsonCreator
-    public ClientType(
-            @BsonProperty(DatabaseConstants.ID) UUID id,
+    public ClientTypeMgd(
+            @BsonProperty(DatabaseConstants.ID) UUID entityId,
             @BsonProperty(DatabaseConstants.CLIENT_TYPE_DISCOUNT) Double discount,
             @BsonProperty(DatabaseConstants.CLIENT_TYPE_MAX_VEHICLES) Integer maxVehicles) {
-        super(id);
+        super(entityId);
         this.discount = discount;
         this.maxVehicles = maxVehicles;
     }
@@ -26,4 +26,5 @@ public class ClientType extends AbstractEntity {
 
     @BsonProperty(DatabaseConstants.CLIENT_TYPE_MAX_VEHICLES)
     private Integer maxVehicles;
+
 }

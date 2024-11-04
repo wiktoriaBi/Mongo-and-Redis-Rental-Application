@@ -2,13 +2,12 @@ package org.example.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.utils.consts.DatabaseConstants;
 
+import java.util.UUID;
+
 @Getter @Setter
-@NoArgsConstructor
 public class Car extends MotorVehicle{
 
     public Car(String plateNumber, Double basePrice, Integer engine_displacement) {

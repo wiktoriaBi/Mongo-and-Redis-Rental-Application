@@ -8,33 +8,37 @@ import org.example.utils.consts.DatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-@NoArgsConstructor
 @Getter @Setter
 public class Client extends AbstractEntity {
 
-    @Column(name = DatabaseConstants.CLIENT_FIRST_NAME, nullable = false)
     private String firstName;
 
-    @Column(name = DatabaseConstants.CLIENT_LAST_NAME, nullable = false)
     private String lastName;
 
     @Column(name = DatabaseConstants.CLIENT_EMAIL, unique = true)
     private String email;
 
-    @Embedded
-    private Address address;
-
     private ClientType clientType;
 
-    @OneToMany(mappedBy = "client")
+    private String cityName;
+
+    private String streetName;
+
+    private String streetNumber;
+
     private List<Rent> currentRents = new ArrayList<>();
 
-    public Client(String firstName, String lastName, String email, Address address, ClientType clientType) {
+    public Client(UUID uuid, String firstName, String lastName, String email,
+                  ClientType clientType, String cityName, String streetName, String streetNumber) {
+        super(uuid);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.address = address;
+        this.cityName = cityName;
+        this.streetName = streetName;
+        this.streetNumber = streetNumber;
         this.clientType = clientType;
     }
 }

@@ -13,29 +13,24 @@ import org.example.utils.consts.DatabaseConstants;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter @Setter
 public class Rent extends AbstractEntity {
 
-    @Column(name = DatabaseConstants.RENT_BEGIN_TIME, nullable = false)
     private LocalDateTime beginTime;
 
-    @Column(name = DatabaseConstants.RENT_END_TIME, nullable = false)
     private LocalDateTime endTime;
 
     private Client client;
 
     private Vehicle vehicle;
 
-    @Column(name = DatabaseConstants.RENT_RENT_COST, nullable = false)
     private Double rentCost = 0.0;
 
 
     // jesli wypozyczenie sie zakonczylo, nalezy zmienic na false
 
-    @Column(name = DatabaseConstants.RENT_ACTIVE, nullable = false)
     private boolean active;
 
     public Rent(LocalDateTime beginTime, LocalDateTime endTime, Client client, Vehicle vehicle) {
@@ -47,7 +42,8 @@ public class Rent extends AbstractEntity {
         this.rentCost = ChronoUnit.HOURS.between(endTime, beginTime) * vehicle.getBasePrice();
     }
 
-    public Rent(LocalDateTime beginTime, LocalDateTime endTime, Client client, Vehicle vehicle, boolean active) {
+    public Rent(UUID id, LocalDateTime beginTime, LocalDateTime endTime, Client client, Vehicle vehicle, boolean active) {
+        super(id);
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.client = client;
