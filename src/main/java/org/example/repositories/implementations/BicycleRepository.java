@@ -7,7 +7,20 @@ import org.example.repositories.interfaces.IBicycleRepository;
 
 public class BicycleRepository extends VehicleRepository<Bicycle> implements IBicycleRepository {
 
-    public BicycleRepository(EntityManager em, Class<Bicycle> entityClass) {
-        super(em, entityClass);
+    public BicycleRepository(Class<Bicycle> entityClass) {
+        super(entityClass);
+    }
+
+    @Override
+    public Bicycle createBicycle(String plateNumber, Double basePrice, Integer pedal_num) {
+        Bicycle bicycle = new Bicycle(
+                UUID.randomUUID(),
+                plateNumber,
+                basePrice,
+                pedal_num
+        );
+        save(bicycle);
+        return bicycle;
+
     }
 }

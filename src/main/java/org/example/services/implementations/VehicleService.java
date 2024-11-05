@@ -9,6 +9,9 @@ import org.example.repositories.implementations.BicycleRepository;
 import org.example.repositories.implementations.CarRepository;
 import org.example.repositories.implementations.MopedRepository;
 import org.example.repositories.implementations.VehicleRepository;
+import org.example.repositories.interfaces.IBicycleRepository;
+import org.example.repositories.interfaces.ICarRepository;
+import org.example.repositories.interfaces.IMopedRepository;
 import org.example.repositories.interfaces.IRentRepository;
 import org.example.repositories.interfaces.IVehicleRepository;
 
@@ -23,36 +26,27 @@ public class VehicleService {
     private final IVehicleRepository<Vehicle> vehicleRepository;
 
     public Bicycle addBicycle(BicycleCreateDTO bicycleCreateDTO) {
-
-        Bicycle bicycle = new Bicycle(
-                bicycleCreateDTO.getPlateNumber(),
-                bicycleCreateDTO.getBasePrice(),
-                bicycleCreateDTO.getPedalNumber()
+        IBicycleRepository bicycleRepository = new BicycleRepository(Bicycle.class);
+        return bicycleRepository.createBicycle(bicycleCreateDTO.getPlateNumber(),
+                                               bicycleCreateDTO.getBasePrice(),
+                                               bicycleCreateDTO.getPedalNumber()
         );
-        IVehicleRepository<Bicycle> bicycleRepository = new BicycleRepository(em, Bicycle.class);
-        return bicycleRepository.save(bicycle);
     }
 
     public Car addCar(MotorVehicleCreateDTO motorVehicleCreateDTO) {
-
-        Car car = new Car(
-                motorVehicleCreateDTO.getPlateNumber(),
-                motorVehicleCreateDTO.getBasePrice(),
-                motorVehicleCreateDTO.getEngine_displacement()
+        ICarRepository carRepository = new CarRepository(Car.class);
+        return carRepository.createCar(motorVehicleCreateDTO.getPlateNumber(),
+                                       motorVehicleCreateDTO.getBasePrice(),
+                                       motorVehicleCreateDTO.getEngine_displacement()
         );
-        IVehicleRepository<Car> carRepository = new CarRepository(em, Car.class);
-        return carRepository.save(car);
     }
 
     public Moped addMoped(MotorVehicleCreateDTO motorVehicleCreateDTO) {
-
-        Moped moped = new Moped(
-                motorVehicleCreateDTO.getPlateNumber(),
-                motorVehicleCreateDTO.getBasePrice(),
-                motorVehicleCreateDTO.getEngine_displacement()
+        IMopedRepository mopedRepository = new MopedRepository(Moped.class);
+        return mopedRepository.createMoped(motorVehicleCreateDTO.getPlateNumber(),
+                                           motorVehicleCreateDTO.getBasePrice(),
+                                           motorVehicleCreateDTO.getEngine_displacement()
         );
-        IVehicleRepository<Moped> mopedRepository = new MopedRepository(em, Moped.class);
-        return mopedRepository.save(moped);
     }
 
     public void updatePlateNumber(UUID vehicleId, String plateNumber) {
@@ -66,13 +60,13 @@ public class VehicleService {
     }
 
     public void updateEngineDisplacement(UUID vehicleId, Integer displacement) {
-        IVehicleRepository<MotorVehicle> vehicleRepository = new VehicleRepository<>(em, MotorVehicle.class);
+        IVehicleRepository<MotorVehicle> vehicleRepository = new VehicleRepository<>(MotorVehicle.class);
         MotorVehicle motorVehicle = vehicleRepository.findById(vehicleId);
         motorVehicle.setEngine_displacement(displacement);
     }
 
     public void updatePedalsNumber(UUID vehicleId, Integer pedalsNumber) {
-        IVehicleRepository<Bicycle> vehicleRepository = new VehicleRepository<>(em, Bicycle.class);
+        IVehicleRepository<Bicycle> vehicleRepository = new VehicleRepository<>(Bicycle.class);
         Bicycle bicycle = vehicleRepository.findById(vehicleId);
         bicycle.setPedalsNumber(pedalsNumber);
     }

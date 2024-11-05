@@ -11,18 +11,14 @@ import org.example.repositories.interfaces.IVehicleRepository;
 
 public class VehicleRepository<T extends AbstractEntity> extends ObjectRepository<T> implements IVehicleRepository<T> {
 
-    public VehicleRepository(EntityManager em, Class<T> entityClass) {
-        super(em, entityClass);
+    public VehicleRepository(Class<T> entityClass) {
+        super(entityClass);
     }
 
     @Override
     public T findByPlateNumber(String plateNumber) {
 
-        CriteriaBuilder cb = getEm().getCriteriaBuilder();
-        CriteriaQuery<T> query = cb.createQuery(getEntityClass());
-        From<T,T> from = query.from(getEntityClass());
-        query.select(from).where(cb.equal(from.get("plateNumber"), plateNumber));
-
-        return getEm().createQuery(query).getSingleResult();
+        //todo implement
+        return null;
     }
 }
