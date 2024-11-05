@@ -2,7 +2,10 @@ package org.example.repositories.implementations;
 
 import jakarta.persistence.EntityManager;
 import org.example.model.Bicycle;
+import org.example.model.Car;
 import org.example.repositories.interfaces.IBicycleRepository;
+
+import java.util.UUID;
 
 
 public class BicycleRepository extends VehicleRepository<Bicycle> implements IBicycleRepository {

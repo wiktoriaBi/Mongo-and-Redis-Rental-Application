@@ -68,6 +68,6 @@ public abstract class ObjectRepository<T extends AbstractEntity> implements IObj
 
     @Override
     public void remove(T object) {
-        em.remove(object);
+        //todo implement
     }
 }

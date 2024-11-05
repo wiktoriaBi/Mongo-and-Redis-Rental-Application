@@ -17,6 +17,8 @@ import org.example.model.Car;
 import org.example.repositories.interfaces.ICarRepository;
 import org.example.utils.consts.DatabaseConstants;
 
+import java.util.List;
+import java.util.UUID;
 
 
 public class CarRepository extends VehicleRepository<Car> implements ICarRepository {
@@ -45,5 +47,18 @@ public class CarRepository extends VehicleRepository<Car> implements ICarReposit
     public CarRepository(Class<Car> entityClass) {
         super(entityClass);
     }
+
+    public Car createCar(String plateNumber, Double basePrice, Integer engine_displacement) {
+        Car car = new Car(
+                UUID.randomUUID(),
+                plateNumber,
+                basePrice,
+                engine_displacement
+        );
+
+        save(car);
+        return car;
+    }
+
 
 }

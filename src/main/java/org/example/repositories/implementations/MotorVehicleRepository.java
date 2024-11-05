@@ -6,7 +6,7 @@ import org.example.repositories.interfaces.IMotorVehicleRepository;
 
 public class MotorVehicleRepository extends VehicleRepository<MotorVehicle> implements IMotorVehicleRepository {
 
-    public MotorVehicleRepository(EntityManager em, Class<MotorVehicle> entityClass) {
-        super(em, entityClass);
+    public MotorVehicleRepository(Class<MotorVehicle> entityClass) {
+        super(entityClass);
     }
 }
