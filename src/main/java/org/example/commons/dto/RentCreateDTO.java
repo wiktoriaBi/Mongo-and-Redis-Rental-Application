@@ -8,14 +8,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 
-@AllArgsConstructor
-@Getter @Setter
-public class RentCreateDTO {
-
-        private LocalDateTime endTime;
-
-        private UUID clientId;
-
-        private UUID vehicleId;
-
-}
+public record RentCreateDTO (
+        LocalDateTime endTime,
+        UUID clientId,
+        UUID vehicleId
+) {}

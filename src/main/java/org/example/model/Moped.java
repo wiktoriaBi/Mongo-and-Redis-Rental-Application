@@ -14,7 +14,6 @@ import org.example.utils.consts.DatabaseConstants;
 import java.util.UUID;
 
 @Getter @Setter
-@NoArgsConstructor
 
 public class Moped extends MotorVehicle {
 

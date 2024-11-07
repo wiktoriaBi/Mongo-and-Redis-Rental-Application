@@ -10,8 +10,7 @@ import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Setter @Getter
 public class Vehicle extends AbstractEntity {
 

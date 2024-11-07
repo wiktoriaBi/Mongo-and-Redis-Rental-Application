@@ -1,5 +1,6 @@
 package org.example.utils.consts;
 
+import org.example.mgd.*;
 public class DatabaseConstants {
 
     //connection
@@ -7,6 +8,8 @@ public class DatabaseConstants {
 
     // abstractEntity
     public static final String ID = "_id";
+
+    public static final String DATABASE_NAME = "rentacar";
 
     // Account
     public static final String ACCOUNT_USERNAME = "username";
@@ -29,7 +32,7 @@ public class DatabaseConstants {
 
     // MotorVehicle
     public static final String MOTOR_VEHICLE_TABLE = "motor_vehicle";
-    public static final String MOTOR_VEHICLE_ENGINE_DISPLACEMENT = "engine_displacement";
+    public static final String MOTOR_VEHICLE_ENGINE_DISPLACEMENT = "engineDisplacement";
 
     // Moped
 

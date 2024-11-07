@@ -6,6 +6,6 @@ import org.example.repositories.interfaces.IClientSilverRepository;
 
 public class ClientSilverRepository extends ObjectRepository<Silver> implements IClientSilverRepository {
     public ClientSilverRepository(EntityManager em, Class<Silver> entityClass) {
-        super(em, entityClass);
+        super(entityClass);
     }
 }

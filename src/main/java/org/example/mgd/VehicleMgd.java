@@ -22,7 +22,7 @@ public abstract class VehicleMgd extends AbstractEntityMgd {
             @BsonProperty(DatabaseConstants.VEHICLE_PLATE_NUMBER) String plateNumber,
             @BsonProperty(DatabaseConstants.VEHICLE_BASE_PRICE) Double basePrice,
             @BsonProperty(DatabaseConstants.VEHICLE_ARCHIVE) boolean archive,
-            @BsonProperty(DatabaseConstants.VEHICLE_RENTED) boolean rented) {
+            @BsonProperty(DatabaseConstants.VEHICLE_RENTED) int rented) {
         super(entityId);
         this.plateNumber = plateNumber;
         this.basePrice = basePrice;
@@ -40,5 +40,5 @@ public abstract class VehicleMgd extends AbstractEntityMgd {
     private boolean archive;
 
     @BsonProperty(DatabaseConstants.VEHICLE_RENTED)
-    private boolean rented;
+    private int rented;
 }

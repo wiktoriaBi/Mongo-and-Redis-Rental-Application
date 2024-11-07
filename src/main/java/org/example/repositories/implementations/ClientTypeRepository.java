@@ -13,14 +13,15 @@ public class ClientTypeRepository extends ObjectRepository<ClientType> implement
 
 
     public ClientTypeRepository(EntityManager em, Class<ClientType> entityClass) {
-        super(em, entityClass);
+        super(entityClass);
     }
 
     @Override
     public ClientType findByType(String type) {
-        TypedQuery<ClientType> query = getEm().createQuery("SELECT ct FROM ClientType ct WHERE TYPE(ct) = :type", getEntityClass());
-        query.setParameter("type", getClassForDiscriminator(type));
-        return query.getSingleResult();
+        //TypedQuery<ClientType> query = getEm().createQuery("SELECT ct FROM ClientType ct WHERE TYPE(ct) = :type", getEntityClass());
+        //query.setParameter("type", getClassForDiscriminator(type));
+        //return query.getSingleResult();
+        return null;
     }
 
     // mapowanie typu do klasy

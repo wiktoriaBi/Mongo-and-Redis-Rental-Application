@@ -8,7 +8,7 @@ import org.example.model.ClientType;
 
 import java.util.UUID;
 
-@NoArgsConstructor
+
 @Setter @Getter
 public class Silver extends ClientType {
 

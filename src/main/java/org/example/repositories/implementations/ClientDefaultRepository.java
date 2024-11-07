@@ -8,7 +8,7 @@ import org.example.repositories.interfaces.IClientDefaultRepository;
 public class ClientDefaultRepository extends ObjectRepository<Default> implements IClientDefaultRepository {
 
     public ClientDefaultRepository(EntityManager em, Class<Default> entityClass) {
-        super(em, entityClass);
+        super(entityClass);
     }
 
 }

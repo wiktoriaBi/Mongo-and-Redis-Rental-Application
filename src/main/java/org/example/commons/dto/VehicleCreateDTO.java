@@ -6,8 +6,8 @@ import lombok.*;
 @Getter @Setter
 public class VehicleCreateDTO {
 
-    private String plateNumber;
+    private final String plateNumber;
 
-    private Double basePrice;
+    private final Double basePrice;
 
 }

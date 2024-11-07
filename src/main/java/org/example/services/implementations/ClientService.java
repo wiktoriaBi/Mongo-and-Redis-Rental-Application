@@ -18,23 +18,24 @@ public class ClientService {
     private final IClientTypeRepository clientTypeRepository;
 
     public Client addClient(String firstName, String lastName, String email,UUID clientTypeId, String cityName, String streetName, String streetNumber) {
-        ClientType clientType = null;
-        try {
-            clientType = clientTypeRepository.findById(clientTypeId);
-            if (clientType == null) {
-                throw new RuntimeException("Client type not found");
-            }
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-        }
-        Client client = new Client(UUID.randomUUID(), firstName, lastName, email, clientType, cityName, streetName, streetNumber);
-        return clientRepository.save(client);
+        //ClientType clientType = null;
+        //try {
+        //    clientType = clientTypeRepository.findById(clientTypeId);
+        //    if (clientType == null) {
+        //        throw new RuntimeException("Client type not found");
+        //    }
+        //} catch (Exception e) {
+        //    em.getTransaction().rollback();
+        //}
+        //Client client = new Client(UUID.randomUUID(), firstName, lastName, email, clientType, cityName, streetName, streetNumber);
+        //return clientRepository.save(client);
+        return null;
     }
 
     public void updateClientAddress(UUID clientId, String city, String street, String number) {
-        Client client = clientRepository.findById(clientId);
-        Address address = new Address(city, street, number);
-        client.setAddress(address);
+        //Client client = clientRepository.findById(clientId);
+        //Address address = new Address(city, street, number);
+        //client.setAddress(address);
     }
 
     public void updateClientFirstName(UUID clientId, String firstName) {
@@ -58,8 +59,8 @@ public class ClientService {
     }
 
     public void removeClient(UUID clientId) {
-        Client foundClient = clientRepository.findById(clientId);
-        clientRepository.remove(foundClient);
+        //Client foundClient = clientRepository.findById(clientId);
+        //clientRepository.remove(foundClient);
     }
 
 }

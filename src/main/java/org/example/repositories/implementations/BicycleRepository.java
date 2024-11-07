@@ -16,14 +16,14 @@ public class BicycleRepository extends VehicleRepository<Bicycle> implements IBi
 
     @Override
     public Bicycle createBicycle(String plateNumber, Double basePrice, Integer pedal_num) {
-        Bicycle bicycle = new Bicycle(
-                UUID.randomUUID(),
-                plateNumber,
-                basePrice,
-                pedal_num
-        );
-        save(bicycle);
-        return bicycle;
+        //Bicycle bicycle = new Bicycle(
+        //        UUID.randomUUID(),
+        //        plateNumber,
+        //        basePrice,
+        //        pedal_num
+        //);
+        //
+        return null;
 
     }
 }

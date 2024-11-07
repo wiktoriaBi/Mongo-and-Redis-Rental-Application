@@ -20,7 +20,7 @@ public class MopedRepository extends VehicleRepository<Moped> implements IMopedR
                 basePrice,
                 engine_displacement
         );
-        save(moped);
+        // save(moped);
         return moped;
     }
 

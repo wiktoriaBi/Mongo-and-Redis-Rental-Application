@@ -33,12 +33,12 @@ public abstract class ObjectRepository<T extends AbstractEntity> implements IObj
 
     ConnectionString connectionString = new ConnectionString(DatabaseConstants.connectionString);
 
-    MongoCredential credential = MongoCredential.createCredential("admin", "admin", "adminpassword".toCharArray());
+    private MongoCredential credential = MongoCredential.createCredential("admin", "admin", "adminpassword".toCharArray());
 
-    CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true)
+    private CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true)
             .conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
 
-    MongoDatabase rentACarDB;
+    protected MongoDatabase rentACarDB;
 
     MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
             .applyConnectionString(connectionString)

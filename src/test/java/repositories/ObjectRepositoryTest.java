@@ -62,7 +62,7 @@ class ObjectRepositoryTest {
         UUID uuid = UUID.randomUUID();
         System.out.println("UUID = " + uuid);
 
-        ClientMgd clientMgd = new ClientMgd(uuid, "Jan", "Kowalski", "jk@gmail.com");
+        ClientMgd clientMgd = new ClientMgd(uuid, "Jan", "Kowalski", "jk@gmail.com", UUID.randomUUID(), 0);
         AccountMgd accountMgd = new AccountMgd(uuid, "JKow", "password!");
 
         ClientEmbeddedMgd clientEmbeddedMgd = new ClientEmbeddedMgd(uuid, clientMgd, accountMgd);
