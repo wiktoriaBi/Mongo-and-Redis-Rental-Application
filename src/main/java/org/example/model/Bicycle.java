@@ -12,11 +12,11 @@ import java.util.UUID;
 @Setter @Getter
 public class Bicycle extends Vehicle {
 
+    private Integer pedalsNumber;
+
     public Bicycle(UUID id, String plateNumber, Double basePrice, Integer pedalsNumber) {
         super(id,plateNumber, basePrice);
         this.pedalsNumber = pedalsNumber;
     }
-
-    private Integer pedalsNumber;
 
 }

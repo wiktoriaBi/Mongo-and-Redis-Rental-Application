@@ -11,8 +11,16 @@ import java.util.UUID;
 @Getter @Setter
 public class Car extends MotorVehicle {
 
-    public Car(UUID id, String plateNumber, Double basePrice, Integer engine_displacement) {
+    public enum TransmissionType {
+        MANUAL,
+        AUTOMATIC,
+    }
+
+    private TransmissionType transmissionType;
+
+    public Car(UUID id, String plateNumber, Double basePrice, Integer engine_displacement, TransmissionType type) {
         super(id, plateNumber, basePrice, engine_displacement);
+        this.transmissionType = type;
     }
 
     public Car (CarMgd carMgd) {

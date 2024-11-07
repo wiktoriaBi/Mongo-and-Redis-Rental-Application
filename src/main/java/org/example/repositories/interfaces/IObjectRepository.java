@@ -10,8 +10,4 @@ public interface IObjectRepository<T> {
 
     T findById(UUID id);
 
-    T save(T object);
-
-    void remove(T object);
-
 }

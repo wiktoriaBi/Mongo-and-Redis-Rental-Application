@@ -2,6 +2,7 @@ package org.example.commons.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.model.MotorVehicle;
 
 
 @Getter @Setter
@@ -13,6 +14,4 @@ public class MopedCreateDTO extends VehicleCreateDTO {
         super(plateNumber, basePrice);
         this.engineDisplacement = engineDisplacement;
     }
-
-    Integer engine_displacement;
 }

@@ -1,8 +1,6 @@
 package org.example.repositories.implementations;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
+import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
@@ -40,17 +38,26 @@ public abstract class ObjectRepository<T extends AbstractEntity> implements IObj
 
     protected MongoDatabase rentACarDB;
 
-    MongoClientSettings settings = MongoClientSettings.builder().credential(credential)
-            .applyConnectionString(connectionString)
-            .codecRegistry(
-                    CodecRegistries.fromRegistries(
-                            CodecRegistries.fromCodecs(new UuidCodec(UuidRepresentation.STANDARD)),
-                            MongoClientSettings.getDefaultCodecRegistry(),
-                            pojoCodecRegistry
-                    ))
-            .build();
+    protected MongoClient mongoClient;
 
-    MongoClient mongoClient = MongoClients.create(settings);
+    public void initDatabaseCon (String databaseName) {
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .credential(credential)
+                .applyConnectionString(connectionString)
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .codecRegistry(
+                        CodecRegistries.fromRegistries(
+                                MongoClientSettings.getDefaultCodecRegistry(),
+                                pojoCodecRegistry
+                        ))
+                .readConcern(ReadConcern.MAJORITY)
+                .writeConcern(WriteConcern.MAJORITY)
+                .readPreference(ReadPreference.primary())
+                .build();
+
+        mongoClient = MongoClients.create(settings);
+        rentACarDB = mongoClient.getDatabase(databaseName);
+    }
 
     protected final String vehicleCollectionName = "vehicles";
 
@@ -66,8 +73,4 @@ public abstract class ObjectRepository<T extends AbstractEntity> implements IObj
         return null;
     }
 
-    @Override
-    public void remove(T object) {
-        //todo implement
-    }
 }

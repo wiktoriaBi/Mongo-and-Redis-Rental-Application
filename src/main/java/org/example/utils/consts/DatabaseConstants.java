@@ -7,26 +7,23 @@ public class DatabaseConstants {
     public static final String connectionString = "mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_three_nodes";
 
     // abstractEntity
-    public static final String ID = "_id";
+    public static final String ID = "id";
 
     public static final String DATABASE_NAME = "rentacar";
 
     // Account
     public static final String ACCOUNT_USERNAME = "username";
-
     public static final String ACCOUNT_PASSWORD = "password";
 
     //ClientEmbeddedMgd
-
     public static final String CLIENT_EMBEDDED_ACCOUNT = "account";
     public static final String CLIENT= "client";
 
     // Vehicle
-
     public static final String BSON_DISCRIMINATOR_KEY = "_clazz";
     public static final String VEHICLE= "vehicle";
-    public static final String VEHICLE_PLATE_NUMBER = "plate_number";
-    public static final String VEHICLE_BASE_PRICE = "base_price";
+    public static final String VEHICLE_PLATE_NUMBER = "plateNumber";
+    public static final String VEHICLE_BASE_PRICE = "basePrice";
     public static final String VEHICLE_ARCHIVE = "archive";
     public static final String VEHICLE_RENTED = "rented";
 
@@ -35,13 +32,13 @@ public class DatabaseConstants {
     public static final String MOTOR_VEHICLE_ENGINE_DISPLACEMENT = "engineDisplacement";
 
     // Moped
-
     public static final String MOPED_DISCRIMINATOR = "moped";
     public static final String MOPED_MOTOR_VEHICLE_ID_FK = "moped_motor_vehicle_id_fk";
 
     //Car
+    public static final String CAR_DISCRIMINATOR = "car";
 
-    public static final String CAR_TABLE = "car";
+    public static final String CAR_TRANSMISSION_TYPE = "transmissionType";
 
     // Bicycle
     public static final String BICYCLE_DISCRIMINATOR = "bicycle";
@@ -82,8 +79,6 @@ public class DatabaseConstants {
 
 
 
-
-
     public static final String CLIENT_CLIENT_TYPE_ID = "client_type_id";
     public static final String CLIENT_CLIENT_TYPE_ID_FK = "client_type_id_fk";
 
@@ -95,6 +90,21 @@ public class DatabaseConstants {
 
     public static final String RENT_RENT_COST = "rent_cost";
     public static final String RENT_ACTIVE = "active";
+
+    //Collection names
+    public static final String CLIENT_COLLECTION_NAME = "clients";
+    public static final String VEHICLE_COLLECTION_NAME = "vehicles";
+    public static final String RENT_COLLECTION_NAME = "rents";
+    public static final String CLIENT_TYPE_COLLECTION_NAME = "client_types";
+
+    //Collection types
+    public static final Class<ClientMgd> CLIENT_COLLECTION_TYPE = ClientMgd.class;
+    public static final Class<VehicleMgd> VEHICLE_COLLECTION_TYPE = VehicleMgd.class;
+    public static final Class<BicycleMgd> BICYCLE_COLLECTION_TYPE = BicycleMgd.class;
+    public static final Class<MopedMgd> MOPED_COLLECTION_TYPE = MopedMgd.class;
+    public static final Class<CarMgd> CAR_COLLECTION_TYPE = CarMgd.class;
+    public static final Class<RentMgd> RENT_COLLECTION_TYPE = RentMgd.class;
+    public static final Class<ClientTypeMgd> CLIENT_TYPE_COLLECTION_TYPE = ClientTypeMgd.class;
 
 
 

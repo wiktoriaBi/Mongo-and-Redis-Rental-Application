@@ -45,7 +45,7 @@ public class ClientMgd extends AbstractEntityMgd {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        clientType = type_id;
+        this.clientType = type_id;
         this.activeRents = activeRents;
     }
 }

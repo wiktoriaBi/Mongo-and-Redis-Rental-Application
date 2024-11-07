@@ -2,16 +2,19 @@ package org.example.repositories.implementations;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCommandException;
 import com.mongodb.MongoCredential;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
+import com.mongodb.client.model.*;
+import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.UuidCodec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.conversions.Bson;
+import org.example.mgd.CarMgd;
 import org.example.model.Car;
 
 import org.example.repositories.interfaces.ICarRepository;
@@ -103,5 +106,50 @@ public class CarRepository extends VehicleRepository<Car> implements ICarReposit
         return new Car(carMgd);
     }
 
+    public void update(Car modifiedCar) {
+        ClientSession clientSession = mongoClient.startSession();
+        try{
+            MongoCollection<CarMgd> vehicleCollection = rentACarDB.getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME,
+                    DatabaseConstants.CAR_COLLECTION_TYPE);
+            Bson filter = Filters.eq(DatabaseConstants.ID, modifiedCar.getId());
+            CarMgd modifiedCarDoc = new CarMgd(modifiedCar);
+            List<Bson> updates = new ArrayList<>();
+            for (Field field : modifiedCarDoc.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value = field.get(modifiedCarDoc);
+                if (value != null) {
+                    updates.add(Updates.set(field.getName(), value));
+                }
+            }
+            Bson combinedUpdates = Updates.combine(updates);
+            vehicleCollection.updateOne(clientSession, filter, combinedUpdates);
+
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Dupa", e);
+        }
+
+    }
+
+    public Car findById(UUID id) {
+        ClientSession clientSession = mongoClient.startSession();
+        try {
+            MongoCollection<CarMgd> vehicleCollection = rentACarDB.getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME,
+                    DatabaseConstants.CAR_COLLECTION_TYPE);
+            Bson discriminatorFilter = Filters.eq(DatabaseConstants.BSON_DISCRIMINATOR_KEY, DatabaseConstants.CAR_DISCRIMINATOR);
+            Bson idFilter = Filters.eq(DatabaseConstants.ID, id);
+            Bson bothFilters = Filters.and(discriminatorFilter, idFilter);
+            CarMgd foundedCar = vehicleCollection.find(clientSession, bothFilters).first();
+
+            if (foundedCar == null) {
+                throw  new RuntimeException("CarRepository: Car with provided UUID not found!!!");
+            }
+            return new Car(foundedCar);
+
+        } catch (MongoCommandException e) {
+            clientSession.abortTransaction();
+            clientSession.close();
+            throw new RuntimeException("MongoCommandException!");
+        }
+    }
 
 }

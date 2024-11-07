@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.mgd.MopedMgd;
 import org.example.model.MotorVehicle;
 import org.example.utils.consts.DatabaseConstants;
 
@@ -19,5 +20,14 @@ public class Moped extends MotorVehicle {
 
     public Moped(UUID uuid, String plateNumber, Double basePrice, Integer engine_displacement) {
         super(uuid, plateNumber, basePrice, engine_displacement);
+    }
+
+    public Moped (MopedMgd mopedMgd) {
+        super(
+            mopedMgd.getEntityId(),
+            mopedMgd.getPlateNumber(),
+            mopedMgd.getBasePrice(),
+            mopedMgd.getEngine_displacement()
+        );
     }
 }
