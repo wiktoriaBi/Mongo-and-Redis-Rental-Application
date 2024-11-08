@@ -46,11 +46,6 @@ public class CarRepository extends VehicleRepository<Car> implements ICarReposit
                                         "bsonType": "object",
                                         "required": ["_id", "rented"],
                                         "properties": {
-                                            "_id" : {
-                                                   "bsonType": "binData",
-                                                   "description": "Unique identifier,I am using it instead of objectId for portibility",
-                                                   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
-                                            },
                                             "rented" : {
                                                 "bsonType" : "int",
                                                 "minimum" : 0,
@@ -133,12 +128,12 @@ public class CarRepository extends VehicleRepository<Car> implements ICarReposit
     public Car findById(UUID id) {
         ClientSession clientSession = mongoClient.startSession();
         try {
-            MongoCollection<CarMgd> vehicleCollection = rentACarDB.getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME,
+            MongoCollection<CarMgd> vehicleCollection = getRentACarDB().getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME,
                     DatabaseConstants.CAR_COLLECTION_TYPE);
             Bson discriminatorFilter = Filters.eq(DatabaseConstants.BSON_DISCRIMINATOR_KEY, DatabaseConstants.CAR_DISCRIMINATOR);
             Bson idFilter = Filters.eq(DatabaseConstants.ID, id);
             Bson bothFilters = Filters.and(discriminatorFilter, idFilter);
-            CarMgd foundedCar = vehicleCollection.find(clientSession, bothFilters).first();
+            CarMgd foundedCar = vehicleCollection.find(bothFilters).first();
 
             if (foundedCar == null) {
                 throw  new RuntimeException("CarRepository: Car with provided UUID not found!!!");

@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @ToString
 @Getter @Setter
-@BsonDiscriminator(key = "_clazz")
+@BsonDiscriminator(key = DatabaseConstants.BSON_DISCRIMINATOR_KEY)
 public abstract class VehicleMgd extends AbstractEntityMgd {
 
     @BsonCreator

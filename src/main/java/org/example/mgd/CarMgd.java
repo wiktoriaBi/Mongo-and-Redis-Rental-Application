@@ -11,7 +11,7 @@ import org.example.utils.consts.DatabaseConstants;
 import java.util.UUID;
 
 @Getter @Setter
-@BsonDiscriminator(value = DatabaseConstants.CAR_DISCRIMINATOR)
+@BsonDiscriminator(key = DatabaseConstants.BSON_DISCRIMINATOR_KEY, value = DatabaseConstants.CAR_DISCRIMINATOR)
 public class CarMgd extends VehicleMgd {
 
     @BsonProperty(DatabaseConstants.MOTOR_VEHICLE_ENGINE_DISPLACEMENT)

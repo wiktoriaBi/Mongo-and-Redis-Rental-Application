@@ -15,7 +15,7 @@ services:
       - MONGO_INITDB_DATABASE=rentacar
     command: --config /etc/mongod.conf --port 27017
     healthcheck:
-      test: ["CMD", mongosh, "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--port" , "27017", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -28,16 +28,16 @@ services:
     container_name: mongodb2
     hostname: mongodb2
     ports:
-      - "27018:27017"
+      - "27018:27018"
     networks:
       - mongonet
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
       - MONGO_INITDB_DATABASE=rentacar
-    command: --config /etc/mongod.conf --port 27017
+    command: --config /etc/mongod.conf --port 27018
     healthcheck:
-      test: ["CMD", mongosh, "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--port" , "27018", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -50,16 +50,16 @@ services:
     container_name: mongodb3
     hostname: mongodb3
     ports:
-      - "27019:27017"
+      - "27019:27019"
     networks:
       - mongonet
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
       - MONGO_INITDB_DATABASE=rentacar
-    command: --config /etc/mongod.conf --port 27017
+    command: --config /etc/mongod.conf --port 27019
     healthcheck:
-      test: ["CMD", mongosh, "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--port" , "27019", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 2s
       retries: 5
@@ -90,8 +90,8 @@ services:
           version: 1,
           members: [
             { _id:0, host : "mongodb1:27017" },
-            { _id:1, host : "mongodb2:27017" },
-            { _id:2, host : "mongodb3:27017" }
+            { _id:1, host : "mongodb2:27018" },
+            { _id:2, host : "mongodb3:27019" }
           ]
         }
       );
