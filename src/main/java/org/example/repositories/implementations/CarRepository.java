@@ -101,15 +101,29 @@ public class CarRepository extends VehicleRepository<Car> implements ICarReposit
         return new Car(carMgd);
     }
 
+    public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            getAllFields(fields, type.getSuperclass());
+        }
+
+        return fields;
+    }
+
     public void update(Car modifiedCar) {
         ClientSession clientSession = mongoClient.startSession();
         try{
-            MongoCollection<CarMgd> vehicleCollection = rentACarDB.getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME,
+            MongoCollection<CarMgd> vehicleCollection = getRentACarDB().getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME,
                     DatabaseConstants.CAR_COLLECTION_TYPE);
             Bson filter = Filters.eq(DatabaseConstants.ID, modifiedCar.getId());
             CarMgd modifiedCarDoc = new CarMgd(modifiedCar);
             List<Bson> updates = new ArrayList<>();
-            for (Field field : modifiedCarDoc.getClass().getDeclaredFields()) {
+
+            List<Field> fieldList = new ArrayList<>();
+            fieldList = getAllFields(fieldList, modifiedCarDoc.getClass());
+
+            for (Field field : fieldList) {
                 field.setAccessible(true);
                 Object value = field.get(modifiedCarDoc);
                 if (value != null) {
@@ -117,11 +131,13 @@ public class CarRepository extends VehicleRepository<Car> implements ICarReposit
                 }
             }
             Bson combinedUpdates = Updates.combine(updates);
-            vehicleCollection.updateOne(clientSession, filter, combinedUpdates);
+            vehicleCollection.updateOne( filter, combinedUpdates);
 
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Dupa", e);
         }
+
+
 
     }
 

@@ -3,15 +3,14 @@ package org.example.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.example.model.Vehicle;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;
 
+@SuperBuilder(toBuilder = true)
 @Setter @Getter
 public class MotorVehicle extends Vehicle {
 

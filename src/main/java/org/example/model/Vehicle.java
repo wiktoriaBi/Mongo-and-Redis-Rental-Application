@@ -1,16 +1,14 @@
 package org.example.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;
 
-
+@SuperBuilder(toBuilder = true)
 @Setter @Getter
 public class Vehicle extends AbstractEntity {
 

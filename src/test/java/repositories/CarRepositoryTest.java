@@ -42,6 +42,15 @@ class CarRepositoryTest {
 
     }
 
+    @Test
+    void updateCar() {
+        carRepository.getMongoClient().getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
+        Car car = carRepository.createCar("AABBEBEBEBBE123", 100.0,3, Car.TransmissionType.MANUAL);
+        Car modifiedCar = Car.builder().basePrice(200.0).id(car.getId()).build();
+        carRepository.update(modifiedCar);
+
+    }
+
     //@Test
     //void findById() {
     //}
