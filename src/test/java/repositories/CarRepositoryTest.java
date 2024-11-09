@@ -1,27 +1,16 @@
 package repositories;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import org.bson.UuidRepresentation;
-import org.bson.codecs.UuidCodec;
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.Conventions;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.example.model.Car;
-import org.example.model.Vehicle;
 import org.example.repositories.implementations.CarRepository;
 import org.example.utils.consts.DatabaseConstants;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CarRepositoryTest {
 
@@ -32,26 +21,50 @@ class CarRepositoryTest {
         carRepository = new CarRepository();
     }
 
+    @AfterEach
+    void dropDatabase() {
+        carRepository.getMongoClient().getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
+    }
 
     @Test
     void createCar() {
-
-        carRepository.getMongoClient().getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
         Car car = carRepository.createCar("AA123", 100.0,3, Car.TransmissionType.MANUAL);
         assertEquals(car.getId(), carRepository.findById(car.getId()).getId());
+        Car car2 = carRepository.createCar("DRUGIEAUTO", 1000.0,6, Car.TransmissionType.AUTOMATIC);
+        assertEquals(car2.getId(), carRepository.findById(car2.getId()).getId());
+        assertEquals(2, carRepository.findAll().size());
+    }
 
+    @Test
+    void createCar_UniquePlateNumberException() {
+        String plateNumber = "AAA1234";
+        Car car = carRepository.createCar(plateNumber, 100.0,3, Car.TransmissionType.MANUAL);
+        assertEquals(car.getId(), carRepository.findById(car.getId()).getId());
+        assertThrows(RuntimeException.class,
+                ()-> carRepository.createCar(plateNumber, 1000.0,6, Car.TransmissionType.AUTOMATIC));
+        assertEquals(1, carRepository.findAll().size());
+    }
+
+    @Test
+    void findCarById_NotFoundException() {
+        String plateNumber = "AAA1234";
+        carRepository.createCar(plateNumber, 100.0,3, Car.TransmissionType.MANUAL);
+        assertThrows(RuntimeException.class, ()-> carRepository.findById(UUID.randomUUID()));
     }
 
     @Test
     void updateCar() {
-        carRepository.getMongoClient().getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
-        Car car = carRepository.createCar("AABBEBEBEBBE123", 100.0,3, Car.TransmissionType.MANUAL);
-        Car modifiedCar = Car.builder().basePrice(200.0).id(car.getId()).build();
+        Car car = carRepository.createCar("AABB123", 100.0,3, Car.TransmissionType.MANUAL);
+        Double newPrice = 200.0;
+        Car modifiedCar = Car.builder().basePrice(newPrice).id(car.getId()).build();
         carRepository.update(modifiedCar);
-
+        assertEquals(newPrice, carRepository.findById(car.getId()).getBasePrice());
     }
 
-    //@Test
-    //void findById() {
-    //}
+    @Test
+    void deleteCar() {
+        Car car = carRepository.createCar("AAB123", 100.0,3, Car.TransmissionType.MANUAL);
+        carRepository.deleteById(car.getId());
+        assertEquals(0, carRepository.findAll().size());
+    }
 }

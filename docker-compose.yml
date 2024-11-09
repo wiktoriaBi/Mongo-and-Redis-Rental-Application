@@ -19,9 +19,6 @@ services:
       interval: 10s
       timeout: 2s
       retries: 5
-    volumes:
-      - "mongo1_data:/data/db"
-      - "mongo1_config:/data/configdb"
 
   mongo_2:
     build: .\custommongo
@@ -41,9 +38,6 @@ services:
       interval: 10s
       timeout: 2s
       retries: 5
-    volumes:
-      - "mongo2_data:/data/db"
-      - "mongo2_config:/data/configdb"
 
   mongo_3:
     build: .\custommongo
@@ -63,9 +57,6 @@ services:
       interval: 10s
       timeout: 2s
       retries: 5
-    volumes:
-      - "mongo3_data:/data/db"
-      - "mongo3_config:/data/configdb"
 
   mongoinit:
     build: .\custommongo
@@ -99,12 +90,4 @@ services:
 networks:
   mongonet: {}
 
-
-volumes:
-  mongo1_data:
-  mongo2_data:
-  mongo3_data:
-  mongo1_config:
-  mongo2_config:
-  mongo3_config:
 

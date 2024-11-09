@@ -7,7 +7,7 @@ public class DatabaseConstants {
     public static final String connectionString = "mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_three_nodes";
 
     // abstractEntity
-    public static final String ID = "id";
+    public static final String ID = "_id";
 
     public static final String DATABASE_NAME = "rentacar";
 
