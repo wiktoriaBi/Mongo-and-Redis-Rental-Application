@@ -4,18 +4,13 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.example.commons.dto.BicycleCreateDTO;
 import org.example.commons.dto.MopedCreateDTO;
-import org.example.model.*;
-import org.example.repositories.implementations.BicycleRepository;
-import org.example.repositories.implementations.CarRepository;
-import org.example.repositories.implementations.MopedRepository;
-import org.example.repositories.implementations.VehicleRepository;
-import org.example.repositories.interfaces.IBicycleRepository;
-import org.example.repositories.interfaces.ICarRepository;
-import org.example.repositories.interfaces.IMopedRepository;
+import org.example.model.Bicycle;
+import org.example.model.Car;
+import org.example.model.Moped;
+import org.example.model.Vehicle;
 import org.example.repositories.interfaces.IRentRepository;
 import org.example.repositories.interfaces.IVehicleRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -26,11 +21,12 @@ public class VehicleService {
     private final IVehicleRepository<Vehicle> vehicleRepository;
 
     public Bicycle addBicycle(BicycleCreateDTO bicycleCreateDTO) {
-        IBicycleRepository bicycleRepository = new BicycleRepository(Bicycle.class);
-        return bicycleRepository.createBicycle(bicycleCreateDTO.getPlateNumber(),
-                                               bicycleCreateDTO.getBasePrice(),
-                                               bicycleCreateDTO.getPedalNumber()
-        );
+        //IBicycleRepository bicycleRepository = new BicycleRepository(Bicycle.class);
+        //return bicycleRepository.createBicycle(bicycleCreateDTO.getPlateNumber(),
+        //                                       bicycleCreateDTO.getBasePrice(),
+        //                                       bicycleCreateDTO.getPedalNumber()
+        //);
+        return null;
     }
 
     public Car addCar(MopedCreateDTO mopedCreateDTO) {

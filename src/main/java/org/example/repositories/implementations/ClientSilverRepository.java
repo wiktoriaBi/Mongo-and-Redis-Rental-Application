@@ -1,11 +1,15 @@
 package org.example.repositories.implementations;
 
-import jakarta.persistence.EntityManager;
+import org.example.mgd.ClientTypeMgd;
 import org.example.model.Silver;
 import org.example.repositories.interfaces.IClientSilverRepository;
 
-public class ClientSilverRepository extends ObjectRepository<Silver> implements IClientSilverRepository {
-    public ClientSilverRepository(EntityManager em, Class<Silver> entityClass) {
-        super(entityClass);
+import java.util.function.Function;
+
+public class ClientSilverRepository extends ObjectRepository<Silver, ClientTypeMgd> implements IClientSilverRepository {
+    public ClientSilverRepository(Function<ClientTypeMgd, Silver> toModelMapper,
+                                  java.util.function.Function<Silver, ClientTypeMgd> toMgdMapper,
+                                  Class<ClientTypeMgd> mgdClass) {
+        super(toModelMapper,toMgdMapper, mgdClass);
     }
 }

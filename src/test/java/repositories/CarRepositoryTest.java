@@ -1,7 +1,9 @@
 package repositories;
 
+import org.example.mgd.CarMgd;
 import org.example.model.Car;
 import org.example.repositories.implementations.CarRepository;
+import org.example.repositories.interfaces.ICarRepository;
 import org.example.utils.consts.DatabaseConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CarRepositoryTest {
 
-    private CarRepository carRepository;
+    private ICarRepository carRepository;
 
     @BeforeEach
     void setUp() {
-        carRepository = new CarRepository();
+        carRepository = new CarRepository(Car::new, CarMgd::new, CarMgd.class);
     }
 
     @AfterEach
@@ -28,9 +30,9 @@ class CarRepositoryTest {
 
     @Test
     void createCar() {
-        Car car = carRepository.createCar("AA123", 100.0,3, Car.TransmissionType.MANUAL);
+        Car car = carRepository.create("AA123", 100.0,3, Car.TransmissionType.MANUAL);
         assertEquals(car.getId(), carRepository.findById(car.getId()).getId());
-        Car car2 = carRepository.createCar("DRUGIEAUTO", 1000.0,6, Car.TransmissionType.AUTOMATIC);
+        Car car2 = carRepository.create("DRUGIEAUTO", 1000.0,6, Car.TransmissionType.AUTOMATIC);
         assertEquals(car2.getId(), carRepository.findById(car2.getId()).getId());
         assertEquals(2, carRepository.findAll().size());
     }
@@ -38,32 +40,34 @@ class CarRepositoryTest {
     @Test
     void createCar_UniquePlateNumberException() {
         String plateNumber = "AAA1234";
-        Car car = carRepository.createCar(plateNumber, 100.0,3, Car.TransmissionType.MANUAL);
+        Car car = carRepository.create(plateNumber, 100.0,3, Car.TransmissionType.MANUAL);
         assertEquals(car.getId(), carRepository.findById(car.getId()).getId());
         assertThrows(RuntimeException.class,
-                ()-> carRepository.createCar(plateNumber, 1000.0,6, Car.TransmissionType.AUTOMATIC));
+                ()-> carRepository.create(plateNumber, 1000.0,6, Car.TransmissionType.AUTOMATIC));
         assertEquals(1, carRepository.findAll().size());
     }
 
     @Test
     void findCarById_NotFoundException() {
         String plateNumber = "AAA1234";
-        carRepository.createCar(plateNumber, 100.0,3, Car.TransmissionType.MANUAL);
+        carRepository.create(plateNumber, 100.0,3, Car.TransmissionType.MANUAL);
         assertThrows(RuntimeException.class, ()-> carRepository.findById(UUID.randomUUID()));
     }
 
     @Test
     void updateCar() {
-        Car car = carRepository.createCar("AABB123", 100.0,3, Car.TransmissionType.MANUAL);
+        Car car = carRepository.create("AABB123", 100.0,3, Car.TransmissionType.MANUAL);
         Double newPrice = 200.0;
-        Car modifiedCar = Car.builder().basePrice(newPrice).id(car.getId()).build();
+        Car.TransmissionType newTransmissionType = Car.TransmissionType.AUTOMATIC;
+        Car modifiedCar = Car.builder().basePrice(newPrice).id(car.getId()).transmissionType(newTransmissionType).build();
         carRepository.update(modifiedCar);
         assertEquals(newPrice, carRepository.findById(car.getId()).getBasePrice());
+        assertEquals(newTransmissionType, carRepository.findById(car.getId()).getTransmissionType());
     }
 
     @Test
     void deleteCar() {
-        Car car = carRepository.createCar("AAB123", 100.0,3, Car.TransmissionType.MANUAL);
+        Car car = carRepository.create("AAB123", 100.0,3, Car.TransmissionType.MANUAL);
         carRepository.deleteById(car.getId());
         assertEquals(0, carRepository.findAll().size());
     }

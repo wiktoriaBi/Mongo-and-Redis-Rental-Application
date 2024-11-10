@@ -1,33 +1,36 @@
 package org.example.repositories.implementations;
 
 import com.mongodb.*;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import jakarta.persistence.EntityManager;
+import com.mongodb.client.*;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bson.UuidRepresentation;
-import org.bson.codecs.UuidCodec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.example.mgd.BicycleMgd;
-import org.example.model.AbstractEntity;
-import org.example.model.Bicycle;
 import org.example.repositories.interfaces.IObjectRepository;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 
-@RequiredArgsConstructor
 @Getter
-public abstract class ObjectRepository<T extends AbstractEntity> implements IObjectRepository<T> {
+public abstract class ObjectRepository<T, M> implements IObjectRepository<T, M> {
 
-    private final Class<T> entityClass;
+
+    private final Function<M, T> toModelMapper;
+    private final Function<T, M> toMgdMapper;
+
+    private final Class<M> mgdClass;
+
+    public ObjectRepository(Function<M, T> toModelMapper, java.util.function.Function<T, M> toMgdMapper, Class<M> mgdClass) {
+        this.toModelMapper = toModelMapper;
+        this.toMgdMapper = toMgdMapper;
+        this.mgdClass = mgdClass;
+    }
 
     ConnectionString connectionString = new ConnectionString(DatabaseConstants.connectionString);
 
@@ -72,5 +75,7 @@ public abstract class ObjectRepository<T extends AbstractEntity> implements IObj
         //todo implement
         return null;
     }
+
+
 
 }

@@ -1,19 +1,22 @@
 package org.example.repositories.implementations;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
+import org.example.mgd.ClientTypeMgd;
 import org.example.model.ClientType;
 import org.example.model.Default;
 import org.example.model.Gold;
 import org.example.model.Silver;
 import org.example.repositories.interfaces.IClientTypeRepository;
 
+import java.util.function.Function;
+
 //todo chyba nie powinno byc abstract, co jak szukamy nieznanego clientType z rent?
-public class ClientTypeRepository extends ObjectRepository<ClientType> implements IClientTypeRepository{
+public class ClientTypeRepository extends ObjectRepository<ClientType, ClientTypeMgd> implements IClientTypeRepository{
 
 
-    public ClientTypeRepository(EntityManager em, Class<ClientType> entityClass) {
-        super(entityClass);
+    public ClientTypeRepository(Function<ClientTypeMgd, ClientType> toModelMapper,
+                                java.util.function.Function<ClientType, ClientTypeMgd> toMgdMapper,
+                                Class<ClientTypeMgd> mgdClass) {
+        super(toModelMapper, toMgdMapper,mgdClass);
     }
 
     @Override

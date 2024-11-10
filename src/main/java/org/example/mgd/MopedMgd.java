@@ -5,12 +5,13 @@ import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.example.model.Moped;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;
 
 @Getter @Setter
-@BsonDiscriminator(value = DatabaseConstants.MOPED_DISCRIMINATOR)
+@BsonDiscriminator(key = DatabaseConstants.BSON_DISCRIMINATOR_KEY, value = DatabaseConstants.MOPED_DISCRIMINATOR)
 public class MopedMgd extends VehicleMgd {
 
     @BsonProperty(DatabaseConstants.MOTOR_VEHICLE_ENGINE_DISPLACEMENT)
@@ -26,5 +27,16 @@ public class MopedMgd extends VehicleMgd {
             @BsonProperty(DatabaseConstants.MOTOR_VEHICLE_ENGINE_DISPLACEMENT) Integer engine_displacement) {
         super(entityId, plateNumber, basePrice, archive, rented);
         this.engine_displacement = engine_displacement;
+    }
+
+    public MopedMgd(Moped moped) {
+        super(
+                moped.getId(),
+                moped.getPlateNumber(),
+                moped.getBasePrice(),
+                moped.isArchive(),
+                moped.isRented() ? 1 : 0
+        );
+        this.engine_displacement = moped.getEngine_displacement();
     }
 }

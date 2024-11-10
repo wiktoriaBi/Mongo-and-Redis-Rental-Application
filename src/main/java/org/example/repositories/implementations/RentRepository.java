@@ -1,18 +1,20 @@
 package org.example.repositories.implementations;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
+import org.example.mgd.RentMgd;
 import org.example.model.Rent;
 import org.example.repositories.interfaces.IRentRepository;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
-public class RentRepository extends ObjectRepository<Rent> implements IRentRepository {
+public class RentRepository extends ObjectRepository<Rent, RentMgd> implements IRentRepository {
 
 
-    public RentRepository(EntityManager em, Class<Rent> entityClass) {
-        super(entityClass);
+    public RentRepository(Function<RentMgd, Rent> toModelMapper,
+                          java.util.function.Function<Rent, RentMgd> toMgdMapper,
+                          Class<RentMgd> mgdClass) {
+        super(toModelMapper, toMgdMapper,mgdClass);
     }
 
 

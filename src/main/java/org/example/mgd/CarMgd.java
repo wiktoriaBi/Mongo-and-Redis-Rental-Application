@@ -38,8 +38,7 @@ public class CarMgd extends VehicleMgd {
 
 
     public CarMgd(Car car) {
-
-        super(car.getId(), car.getPlateNumber(), car.getBasePrice(), car.isArchive(), car.isRented() == true ? 1 : 0);
+        super(car.getId(), car.getPlateNumber(), car.getBasePrice(), car.isArchive(), car.isRented() ? 1 : 0);
         this.engine_displacement = car.getEngine_displacement();
         this.transmissionType = car.getTransmissionType();
 

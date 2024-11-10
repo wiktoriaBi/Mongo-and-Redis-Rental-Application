@@ -1,7 +1,7 @@
 package org.example.repositories.interfaces;
 
+import org.example.mgd.ClientTypeMgd;
 import org.example.model.Silver;
-import org.example.repositories.interfaces.IObjectRepository;
 
-public interface IClientSilverRepository extends IObjectRepository<Silver> {
+public interface IClientSilverRepository extends IObjectRepository<Silver, ClientTypeMgd> {
 }

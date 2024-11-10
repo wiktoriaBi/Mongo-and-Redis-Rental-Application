@@ -1,12 +1,12 @@
 package org.example.repositories.interfaces;
 
+import org.example.mgd.RentMgd;
 import org.example.model.Rent;
-import org.example.repositories.interfaces.IObjectRepository;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface IRentRepository extends IObjectRepository<Rent> {
+public interface IRentRepository extends IObjectRepository<Rent, RentMgd> {
 
     // By client
     List<Rent> findAllActiveByClientId(UUID clientId);
