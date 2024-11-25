@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # Mongo
   mongo_1:
     build: .\custommongo
     container_name: mongodb1
@@ -87,6 +88,23 @@ services:
         }
       );
       '
+  # Redis
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: redis-stack
+    hostname: redis-stack
+    networks:
+      - mongonet # Redis i Mongo w tej samej sieci?????
+    volumes:
+      - redis-stack-data:/data
+    ports:
+      - "8001:8001"
+      - "6379:6379"
+
+volumes:
+  redis-stack-data:
+    driver: local
+
 networks:
   mongonet: {}
 
