@@ -1,6 +1,12 @@
 package org.example.services.implementations;
 
 import lombok.RequiredArgsConstructor;
+import org.example.commons.dto.create.ClientCreateDTO;
+import org.example.commons.dto.update.ClientUpdateDTO;
+import org.example.mgd.ClientMgd;
+import org.example.mgd.ClientTypeMgd;
+import org.example.mgd.RentMgd;
+import org.example.mgd.VehicleMgd;
 import org.example.model.Client;
 import org.example.model.ClientType;
 import org.example.repositories.mongo.implementations.ClientRepository;

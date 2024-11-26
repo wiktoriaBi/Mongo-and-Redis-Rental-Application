@@ -1,6 +1,7 @@
 package org.example.services.interfaces;
 
-import org.example.commons.dto.RentCreateDTO;
+import com.mongodb.client.MongoClient;
+import org.example.commons.dto.create.RentCreateDTO;
 import org.example.model.Rent;
 
 import java.time.LocalDateTime;

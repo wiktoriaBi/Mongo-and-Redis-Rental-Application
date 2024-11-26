@@ -1,4 +1,4 @@
-package org.example.commons.dto;
+package org.example.commons.dto.create;
 
 import lombok.*;
 

@@ -2,8 +2,6 @@ package org.example.commons.dto.create;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.model.Car;
-import org.example.model.MotorVehicle;
 
 @Getter @Setter
 public class CarCreateDTO extends MopedCreateDTO {
