@@ -1,16 +1,19 @@
 package org.example.redis;
 
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisClientConfig;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.exceptions.JedisException;
 
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class RedisConnectionManager {
 
-    private static JedisPooled jedis;
+    private static JedisPooled jedisPooled;
 
     private static Properties loadConfig() {
         Properties properties = new Properties();
@@ -27,12 +30,17 @@ public class RedisConnectionManager {
     }
 
     public static void connect() {
+        if (jedisPooled != null) {
+            return;
+        }
         Properties properties = loadConfig();
         String host = properties.getProperty("redis.host");
         int port = Integer.parseInt(properties.getProperty("redis.port"));
 
+        JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
+
         try {
-            jedis = new JedisPooled(host, port);
+            jedisPooled = new JedisPooled(new HostAndPort(host, port), clientConfig);
         }
         catch (JedisException e) {
             throw new RuntimeException("Błąd podczas łączenia z Redis: " + e.getMessage());
@@ -40,15 +48,15 @@ public class RedisConnectionManager {
     }
 
     public static JedisPooled getConnection() {
-        if (jedis == null) {
+        if (jedisPooled == null) {
             throw new IllegalStateException("Połączenie z Redis nie zostało zainicjalizowane.");
         }
-        return jedis;
+        return jedisPooled;
     }
 
     public static void close() {
-        if (jedis != null){
-            jedis.close();
+        if (jedisPooled != null){
+            jedisPooled.close();
         }
     }
 }

@@ -43,7 +43,7 @@ public class DatabaseConstants {
     // Bicycle
     public static final String BICYCLE_DISCRIMINATOR = "bicycle";
 
-    public static final String BICYCLE_PEDAL_NUMBER = "pedal_number";
+    public static final String BICYCLE_PEDAL_NUMBER = "pedalsNumber";
 
 
 
