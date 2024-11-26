@@ -8,19 +8,24 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.example.mgd.BicycleMgd;
 import org.example.mgd.CarMgd;
+import org.example.mgd.MopedMgd;
 import org.example.mgd.VehicleMgd;
+import org.example.model.Bicycle;
 import org.example.model.Car;
+import org.example.model.Moped;
 import org.example.redis.RedisConnectionManager;
 import org.example.utils.consts.DatabaseConstants;
 import org.junit.jupiter.api.*;
+import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.json.DefaultGsonObjectMapper;
 import redis.clients.jedis.json.JsonObjectMapper;
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 class VehicleRepositoryDecoratorTest {
@@ -72,10 +77,10 @@ class VehicleRepositoryDecoratorTest {
 
     @Test
     void saveVehicle() {
-        Car car = new Car(UUID.randomUUID(),"AwE", 100.0,3, Car.TransmissionType.MANUAL);
+        Car car = new Car(UUID.randomUUID(),"SD67G6", 100.0,3, Car.TransmissionType.MANUAL);
         repo.save(new CarMgd(car));
         Assertions.assertEquals(car.getId(), repo.findById(car.getId()).getId());
-        Car car2 = new Car(UUID.randomUUID(), "DRUGIEEAUTO", 1000.0,6, Car.TransmissionType.AUTOMATIC);
+        Car car2 = new Car(UUID.randomUUID(), "JDF73N", 1000.0,6, Car.TransmissionType.AUTOMATIC);
         repo.save(new CarMgd(car2));
         Assertions.assertEquals(car2.getId(), repo.findById(car2.getId()).getId());
         Assertions.assertEquals(2, repo.findAll().size());
@@ -85,11 +90,47 @@ class VehicleRepositoryDecoratorTest {
 
     @Test
     void findAll() {
-        Car car = new Car(UUID.randomUUID(),"DUPA", 100.0,3, Car.TransmissionType.MANUAL);
+        Car car = new Car(UUID.randomUUID(),"D98PY6", 100.0,3, Car.TransmissionType.MANUAL);
         repo.save(new CarMgd(car));
-        Car car2 = new Car(UUID.randomUUID(), "REDIS", 1000.0,6, Car.TransmissionType.AUTOMATIC);
+        Car car2 = new Car(UUID.randomUUID(), "SE2738", 1000.0,6, Car.TransmissionType.AUTOMATIC);
         repo.save(new CarMgd(car2));
         List<VehicleMgd> all = repo.findAll();
         Assertions.assertEquals(2, all.size());
+    }
+
+
+    @Test
+    void isConnected() {
+        //repo.clearCache();
+
+        JedisPooled pool = RedisConnectionManager.getConnection();
+
+        Assertions.assertEquals(1, repo.findAll().size());
+    }
+
+    @Test
+    void getFromCacheByPlateNumber() {
+        //repo.clearCache();
+        Bicycle bicycle = new Bicycle(UUID.randomUUID(), "DE1298", 20.0, 2);
+        repo.save(new BicycleMgd(bicycle));
+        Assertions.assertEquals(bicycle.getId(), repo.getFromCacheByPlateNumber(bicycle.getPlateNumber()).getId());
+        Assertions.assertEquals(1, repo.findAll().size());
+    }
+
+    @Test
+    void clearCache() {
+        Moped moped = new Moped(UUID.randomUUID(), "KJF5TY", 200.0, 3000);
+        repo.save(new MopedMgd(moped));
+        Assertions.assertNotNull(repo.findById(moped.getId()));
+
+        repo.clearCache();
+
+        String redisKey = DatabaseConstants.VEHICLE_PREFIX + moped.getId();
+        Assertions.assertNull(repo.getFromCache(redisKey));
+    }
+
+    @Test
+    void saveToCache() {
+
     }
 }

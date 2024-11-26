@@ -1,6 +1,7 @@
 package org.example.redis;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.exceptions.JedisException;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.Properties;
 
 public class RedisConnectionManager {
 
-    private static Jedis jedis;
+    private static JedisPooled jedis;
 
     private static Properties loadConfig() {
         Properties properties = new Properties();
@@ -31,14 +32,14 @@ public class RedisConnectionManager {
         int port = Integer.parseInt(properties.getProperty("redis.port"));
 
         try {
-            jedis = new Jedis(host, port);
+            jedis = new JedisPooled(host, port);
         }
         catch (JedisException e) {
             throw new RuntimeException("Błąd podczas łączenia z Redis: " + e.getMessage());
         }
     }
 
-    public static Jedis getConnection() {
+    public static JedisPooled getConnection() {
         if (jedis == null) {
             throw new IllegalStateException("Połączenie z Redis nie zostało zainicjalizowane.");
         }

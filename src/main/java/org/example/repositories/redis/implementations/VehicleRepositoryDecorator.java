@@ -1,7 +1,5 @@
 package org.example.repositories.redis.implementations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.mongodb.client.MongoClient;
 import lombok.Getter;
 
@@ -10,15 +8,13 @@ import org.example.redis.RedisConnectionManager;
 import org.example.repositories.mongo.implementations.VehicleRepository;
 import org.example.repositories.mongo.interfaces.IVehicleRepository;
 import org.example.utils.consts.DatabaseConstants;
-import redis.clients.jedis.Jedis;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.json.DefaultGsonObjectMapper;
 import redis.clients.jedis.json.JsonObjectMapper;
-import redis.clients.jedis.search.FTCreateParams;
-import redis.clients.jedis.search.IndexDefinition;
-import redis.clients.jedis.search.Schema;
+import redis.clients.jedis.search.*;
 
 
 import java.util.List;
@@ -34,29 +30,48 @@ public class VehicleRepositoryDecorator implements IVehicleRepository {
     public VehicleRepositoryDecorator(MongoClient mongoClient) {
         RedisConnectionManager.connect();
         this.vehicleRepository = new VehicleRepository(mongoClient);
+
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
+            Schema schema = new Schema()
+                    .addTextField("plateNumber", 1.0)
+                    .addNumericField("basePrice")
+                    .addTagField("archive")
+                    .addNumericField("rented")
+                    .addTextField("_clazz", 1.0);
+
+            IndexDefinition indexDefinition = new IndexDefinition(IndexDefinition.Type.JSON)
+                    .setPrefixes(DatabaseConstants.VEHICLE_PREFIX);
+
+            try {
+                pool.ftDropIndex(DatabaseConstants.VEHICLE_INDEX);
+            } catch (JedisException ignored) {}
+            pool.ftCreate(DatabaseConstants.VEHICLE_INDEX, IndexOptions.defaultOptions().setDefinition(indexDefinition),
+                    schema);
+        }
     }
 
-    private void saveToCache(String key, VehicleMgd vehicle) {
-        try (Jedis jedis = RedisConnectionManager.getConnection()) {
+    // Metody do Redisa - Zapis danych do cache'a, pobieranie danych z cache'a, czyszczenie cache'a.
+    public void saveToCache(String key, VehicleMgd vehicle) {
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
             String jsonData = objectMapper.writeValueAsString(vehicle);
-            jedis.set(key, jsonData);
+            pool.jsonSet(key, jsonData);
         } catch (Exception e) {
             throw new RuntimeException("Błąd podczas zapisywania pojazdu do Redisa: " + e.getMessage(), e);
         }
     }
 
-    private void saveListToCache(String key, List<VehicleMgd> vehicleList) {
-        try (Jedis jedis = RedisConnectionManager.getConnection()) {
+    public void saveListToCache(String key, List<VehicleMgd> vehicleList) {
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
             String jsonData = objectMapper.writeValueAsString(vehicleList);
-            jedis.set(key, jsonData);
+            pool.jsonSet(key, jsonData);
         } catch (Exception e) {
             throw new RuntimeException("Błąd podczas zapisywania pojazdu do Redisa: " + e.getMessage(), e);
         }
     }
 
-    private VehicleMgd getFromCache(String key) {
-        try (Jedis jedis = RedisConnectionManager.getConnection()) {
-            String jsonData = jedis.get(key);
+    public VehicleMgd getFromCache(String key) {
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
+            String jsonData = pool.get(key);
             if (jsonData == null) {
                 return  null;
             }
@@ -66,9 +81,9 @@ public class VehicleRepositoryDecorator implements IVehicleRepository {
         }
     }
 
-    private List<VehicleMgd> getAllFromCache(String key) {
-        try (Jedis jedis = RedisConnectionManager.getConnection()) {
-            String jsonData = jedis.get(key);
+    public List<VehicleMgd> getAllFromCache(String key) {
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
+            String jsonData = pool.get(key);
             if (jsonData == null) {
                 return  null;
             }
@@ -78,39 +93,58 @@ public class VehicleRepositoryDecorator implements IVehicleRepository {
         }
     }
 
+    public List<VehicleMgd> getAllFromCache() {
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
+            SearchResult searchResult = pool.ftSearch(DatabaseConstants.VEHICLE_INDEX,
+                    new Query().limit(0, 1000));
+            return searchResult.getDocuments().stream().map(doc ->
+                    objectRedisMapper.fromJson( (String)doc.get("$"), VehicleMgd.class)).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Błąd podczas pobierania pojazdów z Redisa: " + e.getMessage(), e);
+        }
+    }
+
+    public VehicleMgd getFromCacheByPlateNumber(String plateNumber) {
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
+            // Construct the query to search by the specified plate_number
+            String queryString = String.format("@plate_number:%s", plateNumber);
+            Query query = new Query(queryString).limit(0, 1000);
+            // Execute the searchF
+            SearchResult searchResult = pool.ftSearch(DatabaseConstants.VEHICLE_INDEX,
+                    query);
+
+            return objectRedisMapper.fromJson(searchResult.getDocuments().getFirst().toString(), VehicleMgd.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching vehicles from Redis: " + e.getMessage(), e);
+        }
+    }
+
     public void deleteFromCache(String key) {
-        try (Jedis jedis = RedisConnectionManager.getConnection()) {
-            jedis.del(key);
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
+            pool.jsonDel(key);
         } catch (Exception e) {
             throw new RuntimeException("Błąd podczas usuwania pojazdu z Redisa: " + e.getMessage(), e);
         }
     }
 
+    public void clearCache() {
+        try (JedisPooled pool = RedisConnectionManager.getConnection()) {
+            String allKeys = DatabaseConstants.VEHICLE_PREFIX + "*";
+            for (String key : pool.keys(allKeys)) {
+                pool.jsonDel(key);
+            }
+        }
+    }
+
+    // Obsługa utraty połączenia z bazą danych Redis.
     @Override
     public VehicleMgd findByPlateNumber(String plateNumber) {
-        //todo schema?
-        //try (Jedis jedis = RedisConnectionManager.getConnection()) {
-        //    Schema schema = new Schema()
-        //            .addTextField("plateNumber", 1.0)
-        //            .addNumericField("basePrice")
-        //            .addTagField("archive")
-        //            .addNumericField("rented");
-        //
-        //    IndexDefinition indexDefinition = new IndexDefinition()
-        //            .setPrefixes("vehicle/");
-        //    FTCreateParams ftCreateParams = new FTCreateParams()
-        //
-        //    jedis.ftCreate("vehicle_idx", IndexOptions.defaultOptions(), schema, indexDefinition);
-        //}
-
-
-        String redisKey = DatabaseConstants.VEHICLE_PREFIX + plateNumber;
-        VehicleMgd vehicleMgd = getFromCache(redisKey);
+        VehicleMgd vehicleMgd = getFromCacheByPlateNumber(plateNumber);
         if (vehicleMgd != null) {
             return vehicleMgd;
         }
         vehicleMgd = vehicleRepository.findByPlateNumber(plateNumber);
-        saveToCache(redisKey, vehicleMgd);
+        saveToCache(DatabaseConstants.VEHICLE_PREFIX + vehicleMgd.getId(), vehicleMgd);
         return vehicleMgd;
     }
 
@@ -188,19 +222,15 @@ public class VehicleRepositoryDecorator implements IVehicleRepository {
 
     @Override
     public List<VehicleMgd> findAll() {
-        String redisKey = DatabaseConstants.VEHICLE_PREFIX + "all";
-        try (Jedis jedis = RedisConnectionManager.getConnection()) {
-            String jsonData = jedis.get(redisKey);
-            if (jsonData != null) {
-                return objectMapper.readValue(jsonData, objectMapper.getTypeFactory().constructCollectionType(List.class, VehicleMgd.class));
-            }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Błąd deserializacji listy pojazdów z Redisa: " + e.getMessage(), e);
-        }
+        List<VehicleMgd> foundVehicles = getAllFromCache();
 
-        List<VehicleMgd> vehicleMgds = vehicleRepository.findAll();
-        saveListToCache(redisKey, vehicleMgds);
-        return vehicleMgds;
+        if (foundVehicles.isEmpty()) {
+            foundVehicles = vehicleRepository.findAll();
+            foundVehicles.forEach(vehicleMgd -> {
+                saveToCache(DatabaseConstants.VEHICLE_PREFIX + vehicleMgd.getId(), vehicleMgd);
+            });
+        }
+        return foundVehicles;
     }
 
     @Override

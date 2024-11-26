@@ -12,6 +12,7 @@ public class DatabaseConstants {
 
     public static final String REDIS_KEY_SEPARATOR = "/";
     public static final String VEHICLE_PREFIX="vehicles/";
+    public static final String VEHICLE_INDEX="vehicle_id";
     // abstractEntity
     public static final String ID = "_id";
 
