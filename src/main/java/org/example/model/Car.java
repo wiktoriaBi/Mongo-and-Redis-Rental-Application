@@ -1,11 +1,8 @@
 package org.example.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.mgd.CarMgd;
-import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;
 
@@ -15,7 +12,7 @@ public class Car extends MotorVehicle {
 
     public enum TransmissionType {
         MANUAL,
-        AUTOMATIC,
+        AUTOMATIC
     }
 
     private TransmissionType transmissionType;
@@ -25,12 +22,12 @@ public class Car extends MotorVehicle {
         this.transmissionType = type;
     }
 
-    public Car (CarMgd carMgd) {
+    public Car(CarMgd carMgd) {
         super(
-            carMgd.getEntityId(),
+            carMgd.getId(),
             carMgd.getPlateNumber(),
             carMgd.getBasePrice(),
-            carMgd.getEngine_displacement()
+            carMgd.getEngineDisplacement()
         );
         this.transmissionType = carMgd.getTransmissionType();
     }

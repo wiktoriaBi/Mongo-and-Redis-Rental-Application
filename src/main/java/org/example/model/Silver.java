@@ -1,18 +1,20 @@
 package org.example.model;
 
-import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.model.ClientType;
+import lombok.experimental.SuperBuilder;
+import org.example.mgd.ClientTypeMgd;
 
 import java.util.UUID;
 
-
+@SuperBuilder(toBuilder = true)
 @Setter @Getter
 public class Silver extends ClientType {
-
     public Silver(UUID id, Double discount, Integer maxVehicles) {
         super(id, discount, maxVehicles);
+    }
+
+    public Silver(ClientTypeMgd clientTypeMgd) {
+        super(clientTypeMgd.getId(), clientTypeMgd.getDiscount(), clientTypeMgd.getMaxVehicles());
     }
 }

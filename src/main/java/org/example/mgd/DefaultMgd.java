@@ -1,19 +1,33 @@
 package org.example.mgd;
 
+import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.example.model.Default;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;
 
-public class DefaultMgd extends ClientTypeMgd{
+@BsonDiscriminator(key = DatabaseConstants.BSON_DISCRIMINATOR_KEY, value = DatabaseConstants.DEFAULT_DISCRIMINATOR)
+public class DefaultMgd extends ClientTypeMgd {
+
     @BsonCreator
-    DefaultMgd (
-            @BsonProperty(DatabaseConstants.ID) UUID entityId,
+    public DefaultMgd (
+            @BsonProperty(DatabaseConstants.ID) UUID id,
             @BsonProperty(DatabaseConstants.CLIENT_TYPE_DISCOUNT) Double discount,
             @BsonProperty(DatabaseConstants.CLIENT_TYPE_MAX_VEHICLES) Integer maxVehicles) {
-        super(entityId, discount, maxVehicles);
+        super(id, discount, maxVehicles);
     }
 
-
+    public DefaultMgd(Default defaultObj) {
+        super(defaultObj);
+    }
+    public DefaultMgd(Document document) {
+        super(
+            document.get(DatabaseConstants.ID, UUID.class),
+            document.getDouble(DatabaseConstants.CLIENT_TYPE_DISCOUNT),
+            document.getInteger(DatabaseConstants.CLIENT_TYPE_MAX_VEHICLES)
+        );
+    }
 }

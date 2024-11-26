@@ -1,97 +1,159 @@
 package org.example.services.implementations;
 
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.example.commons.dto.BicycleCreateDTO;
-import org.example.commons.dto.MopedCreateDTO;
-import org.example.model.Bicycle;
+import org.example.commons.dto.create.BicycleCreateDTO;
+import org.example.commons.dto.create.CarCreateDTO;
+import org.example.commons.dto.create.MopedCreateDTO;
+import org.example.commons.dto.update.BicycleUpdateDTO;
+import org.example.commons.dto.update.CarUpdateDTO;
+import org.example.commons.dto.update.MopedUpdateDTO;
+import org.example.mgd.*;
+import org.example.model.Vehicle;
 import org.example.model.Car;
 import org.example.model.Moped;
-import org.example.model.Vehicle;
-import org.example.repositories.interfaces.IRentRepository;
-import org.example.repositories.interfaces.IVehicleRepository;
+import org.example.model.Bicycle;
+import org.example.repositories.mongo.implementations.RentRepository;
+import org.example.repositories.mongo.implementations.VehicleRepository;
+import org.example.repositories.mongo.interfaces.IRentRepository;
+import org.example.repositories.mongo.interfaces.IVehicleRepository;
+import org.example.services.interfaces.IVehicleService;
+import org.example.utils.consts.DatabaseConstants;
 
+import java.util.List;
 import java.util.UUID;
 
-@RequiredArgsConstructor
-public class VehicleService {
+public class VehicleService extends ObjectService implements IVehicleService {
 
-    private final EntityManager em;
+    private final IVehicleRepository vehicleRepository;
     private final IRentRepository rentRepository;
-    private final IVehicleRepository<Vehicle> vehicleRepository;
 
-    public Bicycle addBicycle(BicycleCreateDTO bicycleCreateDTO) {
-        //IBicycleRepository bicycleRepository = new BicycleRepository(Bicycle.class);
-        //return bicycleRepository.createBicycle(bicycleCreateDTO.getPlateNumber(),
-        //                                       bicycleCreateDTO.getBasePrice(),
-        //                                       bicycleCreateDTO.getPedalNumber()
-        //);
-        return null;
+    public VehicleService() {
+        super();
+        this.vehicleRepository = new VehicleRepository(super.getClient());
+        this.rentRepository = new RentRepository(super.getClient(), RentMgd.class);
     }
 
-    public Car addCar(MopedCreateDTO mopedCreateDTO) {
-        //ICarRepository carRepository = new CarRepository(Car.class);
-        //return carRepository.createCar(mopedCreateDTO.getPlateNumber(),
-        //                               mopedCreateDTO.getBasePrice(),
-        //                               mopedCreateDTO.getEngine_displacement(),
-        // );
-        return null;
+    @Override
+    public Bicycle createBicycle(BicycleCreateDTO bicycleCreateDTO) {
+        BicycleMgd bicycleMgd =  new BicycleMgd(
+                UUID.randomUUID(),
+                bicycleCreateDTO.getPlateNumber(),
+                bicycleCreateDTO.getBasePrice(),
+                false,
+                0,
+                bicycleCreateDTO.getPedalNumber()
+        );
+        vehicleRepository.save(bicycleMgd);
+        return new Bicycle(bicycleMgd);
     }
 
-    public Moped addMoped(MopedCreateDTO mopedCreateDTO) {
-        //IMopedRepository mopedRepository = new MopedRepository(Moped.class);
-        //return mopedRepository.createMoped(mopedCreateDTO.getPlateNumber(),
-        //                                   mopedCreateDTO.getBasePrice(),
-        //                                   mopedCreateDTO.getEngine_displacement()
-        // );
-        return null;
+    @Override
+    public Car createCar(CarCreateDTO carCreateDTO) {
+        CarMgd carMgd =  new CarMgd(
+                UUID.randomUUID(),
+                carCreateDTO.getPlateNumber(),
+                carCreateDTO.getBasePrice(),
+                false,
+                0,
+                carCreateDTO.getEngineDisplacement(),
+                Car.TransmissionType.valueOf(carCreateDTO.getTransmissionType())
+        );
+        vehicleRepository.save(carMgd);
+        return new Car(carMgd);
     }
 
-    public void updatePlateNumber(UUID vehicleId, String plateNumber) {
-        //Vehicle vehicle = vehicleRepository.findById(vehicleId);
-        //vehicle.setPlateNumber(plateNumber);
+    @Override
+    public Moped createMoped(MopedCreateDTO mopedCreateDTO) {
+        MopedMgd moped =  new MopedMgd(
+                UUID.randomUUID(),
+                mopedCreateDTO.getPlateNumber(),
+                mopedCreateDTO.getBasePrice(),
+                false,
+                0,
+                mopedCreateDTO.getEngineDisplacement()
+        );
+        vehicleRepository.save(moped);
+        return new Moped(moped);
+    }
+
+    @Override
+    public Vehicle findByIdAndDiscriminator(UUID id, String discriminator) {
+        VehicleMgd foundVehicle = vehicleRepository.findByIdAndDiscriminator(id, discriminator);
+        Class<?> vehicleClass = VehicleRepository.getDiscriminatorForString(discriminator);
+
+        if (CarMgd.class.equals(vehicleClass)) {
+            return new Car((CarMgd) foundVehicle);
+        }
+        else if (MopedMgd.class.equals(vehicleClass)) {
+            return new Moped((MopedMgd) foundVehicle);
+        }
+        else {
+            return new Bicycle((BicycleMgd) foundVehicle);
+        }
 
     }
 
-    public void updateBasePrice(UUID vehicleId, Double basePrice) {
-        //Vehicle vehicle = vehicleRepository.findById(vehicleId);
-        //vehicle.setBasePrice(basePrice);
-
+    @Override
+    public Vehicle findByPlateNumber(String plateNumber) {
+        return new Vehicle(vehicleRepository.findByPlateNumber(plateNumber));
     }
 
-    public void updateEngineDisplacement(UUID vehicleId, Integer displacement) {
-        //IVehicleRepository<MotorVehicle> vehicleRepository = new VehicleRepository<>(MotorVehicle.class);
-        //MotorVehicle motorVehicle = vehicleRepository.findById(vehicleId);
-        //motorVehicle.setEngine_displacement(displacement);
+    @Override
+    public List<Vehicle> findAll() {
+        return vehicleRepository.findAll().stream().map(Vehicle::new).toList();
     }
 
-    public void updatePedalsNumber(UUID vehicleId, Integer pedalsNumber) {
-        //IVehicleRepository<Bicycle> vehicleRepository = new VehicleRepository<>(Bicycle.class);
-        //Bicycle bicycle = vehicleRepository.findById(vehicleId);
-        //bicycle.setPedalsNumber(pedalsNumber);
+    @Override
+    public List<Vehicle> findAllByDiscriminator(String discriminator) {
+        return vehicleRepository.findAllByDiscriminator(discriminator).stream().map(Vehicle::new).toList();
     }
 
-    public void updateVehicleArchive(UUID vehicleId, boolean archive) {
-        //Vehicle vehicle = vehicleRepository.findById(vehicleId);
-        //if(archive && !vehicle.isRented()){
-        //    vehicle.setArchive(true);
-        //}
-        //else{
-        //    em.getTransaction().rollback();
-        //    throw new RuntimeException("The vehicle cannot be archived!");
-        //}
+    @Override
+    public Bicycle updateBicycle(BicycleUpdateDTO updateDTO) {
+        BicycleMgd modifiedBicycle = BicycleMgd.builder().
+                id(updateDTO.getId()).
+                plateNumber(updateDTO.getPlateNumber()).
+                basePrice(updateDTO.getBasePrice()).
+                pedalsNumber(updateDTO.getPedalNumber()).
+                archive(updateDTO.isArchive()).build();
+        vehicleRepository.findByIdAndDiscriminator(updateDTO.getId(), DatabaseConstants.BICYCLE_DISCRIMINATOR);
+        return new Bicycle((BicycleMgd) vehicleRepository.save(modifiedBicycle));
     }
 
-    public void removeVehicle(UUID vehicleId) {
-        //Vehicle vehicle = vehicleRepository.findById(vehicleId);
-        //List<Rent> allVehicleRents = rentRepository.findAllByVehicleId(vehicleId);
-        //if(allVehicleRents.isEmpty() && !vehicle.isRented()) {
-        //    vehicleRepository.remove(vehicle);
-        //}
-        //else{
-        //    em.getTransaction().rollback();
-        //    throw new RuntimeException("The vehicle cannot be deleted!");
-        //}
+    @Override
+    public Car updateCar(CarUpdateDTO updateDTO) {
+        CarMgd modifiedCar = CarMgd.builder()
+                .id(updateDTO.getId())
+                .plateNumber(updateDTO.getPlateNumber())
+                .basePrice(updateDTO.getBasePrice())
+                .transmissionType(
+                        updateDTO.getTransmissionType() == null ? null : Car.TransmissionType.valueOf(updateDTO.getTransmissionType())
+                )
+                .engineDisplacement(updateDTO.getEngineDisplacement())
+                .build();
+        vehicleRepository.findByIdAndDiscriminator(updateDTO.getId(), DatabaseConstants.CAR_DISCRIMINATOR);
+        return new Car((CarMgd) vehicleRepository.save(modifiedCar));
+    }
+
+    @Override
+    public Moped updateMoped(MopedUpdateDTO updateDTO) {
+        MopedMgd modifiedMoped = MopedMgd.builder().
+                id(updateDTO.getId()).
+                plateNumber(updateDTO.getPlateNumber()).
+                basePrice(updateDTO.getBasePrice()).
+                archive(updateDTO.isArchive()).
+                engineDisplacement(updateDTO.getEngineDisplacement())
+                .build();
+        vehicleRepository.findByIdAndDiscriminator(updateDTO.getId(), DatabaseConstants.MOPED_DISCRIMINATOR);
+        return new Moped((MopedMgd) vehicleRepository.save(modifiedMoped));
+    }
+
+    @Override
+    public void deleteById(UUID vehicleId) {
+        VehicleMgd bicycle = vehicleRepository.findById(vehicleId);
+        if (bicycle.getRented() == 1 || !rentRepository.findAllArchivedByVehicleId(vehicleId).isEmpty()) {
+            throw new RuntimeException ("Bicycle with provided ID has active or archived rents. Unable to delete Bicycle!");
+        }
+        vehicleRepository.deleteById(vehicleId);
     }
 
 }

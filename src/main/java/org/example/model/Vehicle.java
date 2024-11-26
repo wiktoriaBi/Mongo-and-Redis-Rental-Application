@@ -1,10 +1,8 @@
 package org.example.model;
 
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.example.utils.consts.DatabaseConstants;
+import org.example.mgd.VehicleMgd;
 
 import java.util.UUID;
 
@@ -28,5 +26,11 @@ public class Vehicle extends AbstractEntity {
         this.rented = false;
     }
 
-
+    public Vehicle(VehicleMgd vehicleMgd) {
+        super(vehicleMgd.getId());
+        this.plateNumber = vehicleMgd.getPlateNumber();
+        this.basePrice = vehicleMgd.getBasePrice();
+        this.archive = vehicleMgd.isArchive();
+        this.rented = vehicleMgd.getRented() == 1;
+    }
 }
