@@ -21,8 +21,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@BenchmarkMode(Mode.AverageTime)
-@State(Scope.Thread)
+
+// https://jenkov.com/tutorials/java-performance/jmh.html#jmh-benchmark-modes
+@BenchmarkMode(Mode.SingleShotTime)
+@State(Scope.Benchmark)
 @Warmup(iterations = 1)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Fork(value = 1, warmups = 1)
@@ -32,28 +34,6 @@ public class BenchmarkTest {
     public VehicleRepositoryDecorator redisRepo;
     public VehicleRepository mongoRepo;
     public static MongoClient client;
-
-//    public ConnectionString connectionString = new ConnectionString(DatabaseConstants.connectionString);
-//
-//    public MongoCredential credential = MongoCredential.createCredential("admin", "admin", "adminpassword".toCharArray());
-//
-//    public CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(PojoCodecProvider.builder()
-//            .automatic(true)
-//            .conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
-//
-//    public MongoClientSettings settings = MongoClientSettings.builder()
-//            .credential(credential)
-//            .applyConnectionString(connectionString)
-//            .uuidRepresentation(UuidRepresentation.STANDARD)
-//            .codecRegistry(
-//                    CodecRegistries.fromRegistries(
-//                            MongoClientSettings.getDefaultCodecRegistry(),
-//                            pojoCodecRegistry
-//                    ))
-//            .readConcern(ReadConcern.MAJORITY)
-//            .writeConcern(WriteConcern.MAJORITY)
-//            .readPreference(ReadPreference.primary())
-//            .build();
 
     public static void connect() {
 
@@ -104,14 +84,13 @@ public class BenchmarkTest {
         mongoRepo.save(new CarMgd(car));
         idRedis = UUID.randomUUID();
         Car car2 = new Car(idRedis, plateNumberRedis, 100.0, 30, Car.TransmissionType.AUTOMATIC);
-        String redisKey = DatabaseConstants.VEHICLE_PREFIX + car.getId();
 
-        redisRepo.saveToCache(redisKey, new CarMgd(car2));
+        redisRepo.save(new CarMgd(car2));
     }
 
     @TearDown(Level.Invocation)
     public  void tearDown() {
-        //RedisConnectionManager.close();
+       // RedisConnectionManager.close();
     }
 
     @Benchmark
@@ -149,6 +128,11 @@ public class BenchmarkTest {
     }
 
     @Benchmark
+    public void findByIdInCache() {
+        redisRepo.findById(idRedis);
+    }
+
+    @Benchmark
     public void findByPlateNumberNotInCache() {
         redisRepo.clearCache();
         redisRepo.findByPlateNumber(plateNumberMongo);
@@ -162,5 +146,10 @@ public class BenchmarkTest {
     @Benchmark
     public void findByPlateNumberMongo() {
         mongoRepo.findByPlateNumber(plateNumberMongo);
+    }
+
+    @Benchmark
+    public void findByPlateNumberRedis() {
+        redisRepo.getFromCacheByPlateNumber(plateNumberRedis);
     }
 }

@@ -33,8 +33,11 @@ public class VehicleRepositoryDecorator implements IVehicleRepository {
     public VehicleRepositoryDecorator(MongoClient mongoClient) {
         RedisConnectionManager.connect();
         this.vehicleRepository = new VehicleRepository(mongoClient);
-        JedisPooled pool = RedisConnectionManager.getConnection();
+        createSchemaAndIndex();
+    }
 
+    private void createSchemaAndIndex() {
+        JedisPooled pool = RedisConnectionManager.getConnection();
         Schema schema = new Schema()
                 .addTextField("$.plateNumber", 1.0)
                 .addNumericField("$.basePrice")
@@ -120,10 +123,8 @@ public class VehicleRepositoryDecorator implements IVehicleRepository {
 
     public void clearCache() {
             JedisPooled pool = RedisConnectionManager.getConnection();
-            String allKeys = DatabaseConstants.VEHICLE_PREFIX + "*";
-            for (String key : pool.keys(allKeys)) {
-                pool.jsonDel(key);
-            }
+            pool.flushDB();
+            createSchemaAndIndex();
     }
 
     // Obsługa utraty połączenia z bazą danych Redis.
