@@ -58,6 +58,11 @@ class VehicleRepositoryDecoratorTest {
         client.getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
     }
 
+    @BeforeAll
+    static void init() {
+
+    }
+
     @BeforeEach
     void setUp() {
         repo = new VehicleRepositoryDecorator(client);

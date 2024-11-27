@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@EnabledIf("checkRedisConnection")
 public class RepositoryRedisCacheTest {
 
     static VehicleRepositoryDecorator repo;
@@ -75,6 +76,12 @@ public class RepositoryRedisCacheTest {
     static void tearDown() {
         RedisConnectionManager.close();
     }
+
+    public static boolean checkRedisConnection() {
+        connect();
+        return RedisConnectionManager.getConnection() != null;
+    }
+
 
     @Test
     void clearCache() {

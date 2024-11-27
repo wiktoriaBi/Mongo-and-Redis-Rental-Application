@@ -88,8 +88,8 @@ public class BenchmarkTest {
 
     @TearDown(Level.Invocation)
     public  void tearDown() {
-        RedisConnectionManager.close();
-        redisRepo = null;
+        //RedisConnectionManager.close();
+        //redisRepo = null;
     }
 
     @Benchmark

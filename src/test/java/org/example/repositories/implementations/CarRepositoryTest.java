@@ -118,7 +118,7 @@ class CarRepositoryTest {
         Car modifiedCar = Car.builder().basePrice(newPrice).id(car.getId()).transmissionType(newTransmissionType).build();
         carRepository.save(new CarMgd(modifiedCar));
         assertEquals(newPrice, carRepository.findById(car.getId()).getBasePrice());
-        CarMgd updatedCar = (CarMgd) carRepository.findById(car.getId()); //todo test
+        CarMgd updatedCar = (CarMgd) carRepository.findById(car.getId());
         assertEquals(newTransmissionType, updatedCar.getTransmissionType());
     }
 

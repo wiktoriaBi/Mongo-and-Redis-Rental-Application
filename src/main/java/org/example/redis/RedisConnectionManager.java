@@ -36,7 +36,10 @@ public class RedisConnectionManager {
         String host = properties.getProperty("redis.host");
         int port = Integer.parseInt(properties.getProperty("redis.port"));
 
-        JedisClientConfig clientConfig = DefaultJedisClientConfig.builder().build();
+        JedisClientConfig clientConfig = DefaultJedisClientConfig.builder()
+                .connectionTimeoutMillis(30)
+                .timeoutMillis(10)
+                .build();
 
         try {
             jedisPooled = new JedisPooled(new HostAndPort(host, port), clientConfig);
@@ -47,9 +50,10 @@ public class RedisConnectionManager {
     }
 
     public static JedisPooled getConnection() {
-        try{
+        try {
             connect();
-            jedisPooled.getPool().getResource();
+            jedisPooled.ping();
+            //System.out.println(">>>ping "+output);
         }
         catch (JedisException e) {
             return null;

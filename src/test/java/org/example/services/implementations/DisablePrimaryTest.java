@@ -10,8 +10,14 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.example.commons.dto.create.RentCreateDTO;
 import org.example.mgd.*;
 import org.example.mgd.clientType.ClientTypeMgd;
+import org.example.mgd.clientType.SilverMgd;
+import org.example.mgd.vehicle.CarMgd;
+import org.example.model.Client;
+import org.example.model.Rent;
+import org.example.model.clientType.Silver;
 import org.example.model.vehicle.Car;
 import org.example.repositories.mongo.implementations.*;
 import org.example.repositories.mongo.interfaces.*;
@@ -22,8 +28,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class DisablePrimaryTest {
 
@@ -86,45 +96,44 @@ public class DisablePrimaryTest {
     @Test
     void disableMongoTest() {
         Car car = new Car(UUID.randomUUID(),"AA123", 100.0,3, Car.TransmissionType.MANUAL);
-        //todo uncomment
-        //vehicleRepository.save(new CarMgd(car));
-        //assertEquals(car.getId(), vehicleRepository.findById(car.getId()).getId());
-        //String email = "test23@test.com";
-        //Silver silver = new Silver(UUID.randomUUID(), 10.0, 5);
-        //clientTypeRepository.save(new SilverMgd(silver));
-        //Client client = new Client(UUID.randomUUID(), "Piotrek", "Leszcz",
-        //        email, silver, "Wawa", "Kwiatowa", "15");
-        //clientRepository.save(new ClientMgd(client));
-        //
-        //LocalDateTime endTime = LocalDateTime.now().plusHours(8);
-        //
-        //RentCreateDTO rentCreateDTO = new RentCreateDTO(endTime, client.getId(), car.getId());
-        //
-        //Rent newRent = rentService.createRent(rentCreateDTO);
-        //
-        //assertEquals(newRent.getId(), rentService.findRentById(newRent.getId()).getId());
-        //assertEquals(endTime, newRent.getEndTime());
-        //
-        //assertEquals(790, rentService.findRentById(newRent.getId()).getRentCost());
-        //assertEquals(car.getId(), rentService.findRentById(newRent.getId()).getVehicle().getId());
-        //assertEquals(client.getId(), rentService.findRentById(newRent.getId()).getClient().getId());
-        //assertEquals(1, clientRepository.findById(client.getId()).getActiveRents());
-        //assertEquals(1, vehicleRepository.findById(car.getId()).getRented());
-        //
-        //String primaryHostName = getPrimaryHostName();
-        //System.out.println("Primary ->>>>>> " +primaryHostName);
-        //
-        //shutdownPrimaryNode();
-        //
-        //System.out.println("Primary ->>>>>> " +getPrimaryHostName());
-        //
-        //assertEquals(790, rentService.findRentById(newRent.getId()).getRentCost());
-        //assertEquals(car.getId(), rentService.findRentById(newRent.getId()).getVehicle().getId());
-        //assertEquals(client.getId(), rentService.findRentById(newRent.getId()).getClient().getId());
-        //assertEquals(1, clientRepository.findById(client.getId()).getActiveRents());
-        //assertEquals(1, vehicleRepository.findById(car.getId()).getRented());
-        //
-        //assertNotEquals(getPrimaryHostName(), primaryHostName);
+        vehicleRepository.save(new CarMgd(car));
+        assertEquals(car.getId(), vehicleRepository.findById(car.getId()).getId());
+        String email = "test23@test.com";
+        Silver silver = new Silver(UUID.randomUUID(), 10.0, 5);
+        clientTypeRepository.save(new SilverMgd(silver));
+        Client client = new Client(UUID.randomUUID(), "Piotrek", "Leszcz",
+                email, silver, "Wawa", "Kwiatowa", "15");
+        clientRepository.save(new ClientMgd(client));
+
+        LocalDateTime endTime = LocalDateTime.now().plusHours(8);
+
+        RentCreateDTO rentCreateDTO = new RentCreateDTO(endTime, client.getId(), car.getId());
+
+        Rent newRent = rentService.createRent(rentCreateDTO);
+
+        assertEquals(newRent.getId(), rentService.findRentById(newRent.getId()).getId());
+        assertEquals(endTime, newRent.getEndTime());
+
+        assertEquals(790, rentService.findRentById(newRent.getId()).getRentCost());
+        assertEquals(car.getId(), rentService.findRentById(newRent.getId()).getVehicle().getId());
+        assertEquals(client.getId(), rentService.findRentById(newRent.getId()).getClient().getId());
+        assertEquals(1, clientRepository.findById(client.getId()).getActiveRents());
+        assertEquals(1, vehicleRepository.findById(car.getId()).getRented());
+
+        String primaryHostName = getPrimaryHostName();
+        System.out.println("Primary ->>>>>> " +primaryHostName);
+
+        shutdownPrimaryNode();
+
+        System.out.println("Primary ->>>>>> " +getPrimaryHostName());
+
+        assertEquals(790, rentService.findRentById(newRent.getId()).getRentCost());
+        assertEquals(car.getId(), rentService.findRentById(newRent.getId()).getVehicle().getId());
+        assertEquals(client.getId(), rentService.findRentById(newRent.getId()).getClient().getId());
+        assertEquals(1, clientRepository.findById(client.getId()).getActiveRents());
+        assertEquals(1, vehicleRepository.findById(car.getId()).getRented());
+
+        assertNotEquals(getPrimaryHostName(), primaryHostName);
     }
 
     private void shutdownPrimaryNode() {
