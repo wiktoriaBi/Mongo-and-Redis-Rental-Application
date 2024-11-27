@@ -1,6 +1,6 @@
 package org.example.repositories.mongo.interfaces;
 
-import org.example.mgd.VehicleMgd;
+import org.example.mgd.vehicle.VehicleMgd;
 
 import java.util.List;
 import java.util.UUID;

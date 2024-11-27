@@ -2,7 +2,6 @@ package org.example.services.interfaces;
 
 import org.example.commons.dto.create.ClientCreateDTO;
 import org.example.commons.dto.update.ClientUpdateDTO;
-import org.example.mgd.VehicleMgd;
 import org.example.model.Client;
 import org.example.repositories.mongo.interfaces.IClientTypeRepository;
 import org.example.repositories.mongo.interfaces.IRentRepository;

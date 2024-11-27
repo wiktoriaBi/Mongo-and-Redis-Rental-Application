@@ -8,10 +8,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.example.mgd.BicycleMgd;
-import org.example.mgd.CarMgd;
-import org.example.mgd.MopedMgd;
-import org.example.mgd.VehicleMgd;
+import org.example.mgd.vehicle.BicycleMgd;
+import org.example.mgd.vehicle.CarMgd;
+import org.example.mgd.vehicle.MopedMgd;
+import org.example.mgd.vehicle.VehicleMgd;
 
 import org.example.repositories.mongo.interfaces.IVehicleRepository;
 import org.example.utils.consts.DatabaseConstants;

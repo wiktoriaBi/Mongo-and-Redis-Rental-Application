@@ -5,17 +5,16 @@ import com.mongodb.client.ClientSession;
 import lombok.Getter;
 import org.example.commons.dto.create.RentCreateDTO;
 import org.example.mgd.ClientMgd;
-import org.example.mgd.ClientTypeMgd;
+import org.example.mgd.clientType.ClientTypeMgd;
 import org.example.mgd.RentMgd;
-import org.example.mgd.VehicleMgd;
+import org.example.mgd.vehicle.VehicleMgd;
 import org.example.model.Client;
-import org.example.model.ClientType;
+import org.example.model.clientType.ClientType;
 import org.example.model.Rent;
-import org.example.model.Vehicle;
+import org.example.model.vehicle.Vehicle;
 import org.example.repositories.mongo.implementations.ClientRepository;
 import org.example.repositories.mongo.implementations.ClientTypeRepository;
 import org.example.repositories.mongo.implementations.RentRepository;
-import org.example.repositories.mongo.implementations.VehicleRepository;
 import org.example.repositories.mongo.interfaces.IClientRepository;
 import org.example.repositories.mongo.interfaces.IClientTypeRepository;
 import org.example.repositories.mongo.interfaces.IRentRepository;
@@ -36,10 +35,10 @@ public class RentService extends ObjectService implements IRentService {
     private final IClientTypeRepository clientTypeRepository;
 
 
-    public RentService() {
+    public RentService(IVehicleRepository vehicleRepository) {
         super();
         this.rentRepository = new RentRepository(super.getClient(), RentMgd.class);
-        this.vehicleRepository = new VehicleRepository(super.getClient());
+        this.vehicleRepository = vehicleRepository;
         this.clientRepository = new ClientRepository(super.getClient(), ClientMgd.class);
         this.clientTypeRepository = new ClientTypeRepository(super.getClient(), ClientTypeMgd.class);
     }

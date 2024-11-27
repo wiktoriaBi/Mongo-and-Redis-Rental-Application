@@ -1,9 +1,9 @@
-package org.example.model;
+package org.example.model.vehicle;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.example.mgd.MopedMgd;
+import org.example.mgd.vehicle.MopedMgd;
 
 import java.util.UUID;
 

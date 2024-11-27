@@ -10,9 +10,9 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.example.commons.dto.create.RentCreateDTO;
 import org.example.mgd.*;
-import org.example.model.*;
+import org.example.mgd.clientType.ClientTypeMgd;
+import org.example.model.vehicle.Car;
 import org.example.repositories.mongo.implementations.*;
 import org.example.repositories.mongo.interfaces.*;
 import org.example.services.interfaces.IRentService;
@@ -22,11 +22,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 public class DisablePrimaryTest {
 
     private IVehicleRepository vehicleRepository;
@@ -74,7 +72,7 @@ public class DisablePrimaryTest {
         clientRepository = new ClientRepository(client, ClientMgd.class);
         clientTypeRepository = new ClientTypeRepository(client, ClientTypeMgd.class);
         vehicleRepository = new VehicleRepository(client);
-        rentService = new RentService();
+        rentService = new RentService(vehicleRepository);
     }
 
     @AfterEach

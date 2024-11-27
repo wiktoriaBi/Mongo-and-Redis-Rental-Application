@@ -1,9 +1,9 @@
-package org.example.model;
+package org.example.model.clientType;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.example.mgd.ClientTypeMgd;
+import org.example.mgd.clientType.ClientTypeMgd;
 
 import java.util.UUID;
 

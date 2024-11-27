@@ -1,16 +1,13 @@
 package org.example.utils.consts;
 
 import org.example.mgd.*;
+
 public class DatabaseConstants {
 
     //connection
     public static final String connectionString = "mongodb://mongodb1:27017,mongodb2:27018,mongodb3:27019/?replicaSet=replica_set_three_nodes";
 
     // redis
-    public static final String REDIS_HOST = "localhost";
-    public static final int REDIS_PORT = 6379;
-
-    public static final String REDIS_KEY_SEPARATOR = "/";
     public static final String VEHICLE_PREFIX="vehicles/";
     public static final String VEHICLE_INDEX="vehicle_id";
     // abstractEntity
@@ -80,7 +77,6 @@ public class DatabaseConstants {
     public static final String RENT_END_TIME = "end_time";
 
     public static final String RENT_RENT_COST = "rent_cost";
-    public static final String RENT_ACTIVE = "active";
     public static final String RENT_CLIENT_ID = "client._id";
     public static final String RENT_VEHICLE_ID = "vehicle._id";
 
@@ -93,12 +89,7 @@ public class DatabaseConstants {
 
     //Collection types
     public static final Class<ClientMgd> CLIENT_COLLECTION_TYPE = ClientMgd.class;
-    public static final Class<VehicleMgd> VEHICLE_COLLECTION_TYPE = VehicleMgd.class;
-    public static final Class<BicycleMgd> BICYCLE_COLLECTION_TYPE = BicycleMgd.class;
-    public static final Class<MopedMgd> MOPED_COLLECTION_TYPE = MopedMgd.class;
-    public static final Class<CarMgd> CAR_COLLECTION_TYPE = CarMgd.class;
     public static final Class<RentMgd> RENT_COLLECTION_TYPE = RentMgd.class;
-    public static final Class<ClientTypeMgd> CLIENT_TYPE_COLLECTION_TYPE = ClientTypeMgd.class;
 
 
 

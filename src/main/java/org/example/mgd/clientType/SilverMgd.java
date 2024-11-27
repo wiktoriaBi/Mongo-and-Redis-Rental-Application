@@ -1,11 +1,11 @@
-package org.example.mgd;
+package org.example.mgd.clientType;
 
 import lombok.EqualsAndHashCode;
 import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.example.model.Silver;
+import org.example.model.clientType.Silver;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;

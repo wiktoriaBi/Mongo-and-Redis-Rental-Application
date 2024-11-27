@@ -2,8 +2,8 @@ package org.example.services.implementations;
 
 import org.example.commons.dto.create.BicycleCreateDTO;
 import org.example.commons.dto.update.BicycleUpdateDTO;
-import org.example.model.Bicycle;
-import org.example.model.Vehicle;
+import org.example.model.vehicle.Bicycle;
+import org.example.model.vehicle.Vehicle;
 import org.example.services.interfaces.IVehicleService;
 import org.example.utils.consts.DatabaseConstants;
 import org.junit.jupiter.api.AfterEach;

@@ -9,7 +9,14 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.example.mgd.*;
+import org.example.mgd.clientType.ClientTypeMgd;
+import org.example.mgd.clientType.DefaultMgd;
+import org.example.mgd.clientType.GoldMgd;
+import org.example.mgd.clientType.SilverMgd;
+import org.example.mgd.vehicle.BicycleMgd;
+import org.example.mgd.vehicle.CarMgd;
+import org.example.mgd.vehicle.MopedMgd;
+import org.example.mgd.vehicle.VehicleMgd;
 import org.example.services.interfaces.IObjectService;
 import org.example.utils.consts.DatabaseConstants;
 

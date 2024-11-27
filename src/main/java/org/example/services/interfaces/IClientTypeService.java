@@ -2,10 +2,10 @@ package org.example.services.interfaces;
 
 import org.example.commons.dto.create.ClientTypeCreateDTO;
 import org.example.commons.dto.update.ClientTypeUpdateDTO;
-import org.example.model.ClientType;
-import org.example.model.Default;
-import org.example.model.Gold;
-import org.example.model.Silver;
+import org.example.model.clientType.ClientType;
+import org.example.model.clientType.Default;
+import org.example.model.clientType.Gold;
+import org.example.model.clientType.Silver;
 import org.example.repositories.mongo.interfaces.IClientRepository;
 
 import java.util.List;

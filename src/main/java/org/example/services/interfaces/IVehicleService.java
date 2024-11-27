@@ -6,11 +6,10 @@ import org.example.commons.dto.create.MopedCreateDTO;
 import org.example.commons.dto.update.BicycleUpdateDTO;
 import org.example.commons.dto.update.CarUpdateDTO;
 import org.example.commons.dto.update.MopedUpdateDTO;
-import org.example.mgd.VehicleMgd;
-import org.example.model.Bicycle;
-import org.example.model.Car;
-import org.example.model.Moped;
-import org.example.model.Vehicle;
+import org.example.model.vehicle.Bicycle;
+import org.example.model.vehicle.Car;
+import org.example.model.vehicle.Moped;
+import org.example.model.vehicle.Vehicle;
 
 import java.util.List;
 import java.util.UUID;

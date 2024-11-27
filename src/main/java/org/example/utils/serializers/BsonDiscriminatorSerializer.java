@@ -12,11 +12,11 @@ public class BsonDiscriminatorSerializer implements JsonSerializer<Object> {
     @Override
     public JsonElement serialize(Object src, Type typeOfSrc, JsonSerializationContext context) {
         Class<?> clazz = src.getClass();
-        BsonDiscriminator discriminator = clazz.getAnnotation(BsonDiscriminator.class);
+        String discriminator = clazz.getAnnotation(BsonDiscriminator.class).value();
 
         JsonObject jsonObject = defaultGson.toJsonTree(src).getAsJsonObject();
         if (discriminator != null) {
-            jsonObject.addProperty("_clazz", discriminator.value());
+            jsonObject.addProperty("_clazz", discriminator);
         }
         return jsonObject;
     }

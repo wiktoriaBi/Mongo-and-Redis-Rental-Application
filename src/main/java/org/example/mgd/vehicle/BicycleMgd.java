@@ -1,4 +1,4 @@
-package org.example.mgd;
+package org.example.mgd.vehicle;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.example.model.Bicycle;
+import org.example.model.vehicle.Bicycle;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;

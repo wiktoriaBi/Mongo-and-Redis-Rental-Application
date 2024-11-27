@@ -11,7 +11,11 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import org.example.commons.dto.create.ClientCreateDTO;
 import org.example.commons.dto.update.ClientUpdateDTO;
 import org.example.mgd.*;
+import org.example.mgd.clientType.SilverMgd;
+import org.example.mgd.vehicle.CarMgd;
 import org.example.model.*;
+import org.example.model.clientType.Silver;
+import org.example.model.vehicle.Car;
 import org.example.repositories.mongo.implementations.VehicleRepository;
 
 import org.example.repositories.mongo.interfaces.IVehicleRepository;

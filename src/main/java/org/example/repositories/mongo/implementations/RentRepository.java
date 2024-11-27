@@ -10,7 +10,10 @@ import com.mongodb.client.model.ValidationOptions;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.example.mgd.*;
-import org.example.model.Moped;
+import org.example.mgd.vehicle.BicycleMgd;
+import org.example.mgd.vehicle.CarMgd;
+import org.example.mgd.vehicle.MopedMgd;
+import org.example.model.vehicle.Moped;
 import org.example.repositories.mongo.interfaces.IRentRepository;
 import org.example.utils.consts.DatabaseConstants;
 

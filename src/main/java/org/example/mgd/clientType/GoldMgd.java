@@ -1,29 +1,32 @@
-package org.example.mgd;
+package org.example.mgd.clientType;
 
+import lombok.EqualsAndHashCode;
 import org.bson.Document;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.example.model.Default;
+import org.example.model.clientType.Gold;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.UUID;
 
-@BsonDiscriminator(key = DatabaseConstants.BSON_DISCRIMINATOR_KEY, value = DatabaseConstants.DEFAULT_DISCRIMINATOR)
-public class DefaultMgd extends ClientTypeMgd {
+@EqualsAndHashCode(callSuper=true)
+@BsonDiscriminator(key = DatabaseConstants.BSON_DISCRIMINATOR_KEY, value = DatabaseConstants.GOLD_DISCRIMINATOR)
+public class GoldMgd extends ClientTypeMgd {
 
     @BsonCreator
-    public DefaultMgd (
+    public GoldMgd (
             @BsonProperty(DatabaseConstants.ID) UUID id,
             @BsonProperty(DatabaseConstants.CLIENT_TYPE_DISCOUNT) Double discount,
             @BsonProperty(DatabaseConstants.CLIENT_TYPE_MAX_VEHICLES) Integer maxVehicles) {
         super(id, discount, maxVehicles);
     }
 
-    public DefaultMgd(Default defaultObj) {
-        super(defaultObj);
+    public GoldMgd(Gold gold) {
+        super(gold);
     }
-    public DefaultMgd(Document document) {
+
+    public GoldMgd(Document document) {
         super(
             document.get(DatabaseConstants.ID, UUID.class),
             document.getDouble(DatabaseConstants.CLIENT_TYPE_DISCOUNT),

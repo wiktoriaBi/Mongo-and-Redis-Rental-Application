@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.example.mgd.vehicle.VehicleMgd;
 import org.example.model.Rent;
 import org.example.utils.consts.DatabaseConstants;
 

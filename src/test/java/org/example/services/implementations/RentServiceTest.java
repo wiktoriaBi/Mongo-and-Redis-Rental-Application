@@ -10,9 +10,15 @@ import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.example.commons.dto.create.RentCreateDTO;
 import org.example.mgd.*;
+import org.example.mgd.clientType.ClientTypeMgd;
+import org.example.mgd.clientType.SilverMgd;
+import org.example.mgd.vehicle.CarMgd;
 import org.example.model.*;
+import org.example.model.clientType.Silver;
+import org.example.model.vehicle.Car;
 import org.example.repositories.mongo.implementations.*;
 import org.example.repositories.mongo.interfaces.*;
+import org.example.repositories.redis.implementations.VehicleRepositoryDecorator;
 import org.example.services.interfaces.IRentService;
 import org.example.utils.consts.DatabaseConstants;
 import org.junit.jupiter.api.AfterEach;
@@ -73,8 +79,8 @@ public class RentServiceTest {
         rentRepository = new RentRepository(client, RentMgd.class);
         clientRepository = new ClientRepository(client, ClientMgd.class);
         clientTypeRepository = new ClientTypeRepository(client, ClientTypeMgd.class);
-        vehicleRepository = new VehicleRepository(client);
-        rentService = new RentService();
+        vehicleRepository = new VehicleRepositoryDecorator(client);
+        rentService = new RentService(vehicleRepository);
     }
 
     @AfterEach

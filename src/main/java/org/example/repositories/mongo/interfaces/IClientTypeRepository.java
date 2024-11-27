@@ -1,6 +1,6 @@
 package org.example.repositories.mongo.interfaces;
 
-import org.example.mgd.ClientTypeMgd;
+import org.example.mgd.clientType.ClientTypeMgd;
 
 import java.util.UUID;
 

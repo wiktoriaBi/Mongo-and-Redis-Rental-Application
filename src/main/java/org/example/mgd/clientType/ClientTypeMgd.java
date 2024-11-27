@@ -1,11 +1,12 @@
-package org.example.mgd;
+package org.example.mgd.clientType;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.example.model.ClientType;
+import org.example.mgd.AbstractEntityMgd;
+import org.example.model.clientType.ClientType;
 import org.example.utils.consts.DatabaseConstants;
 
 import java.util.Objects;

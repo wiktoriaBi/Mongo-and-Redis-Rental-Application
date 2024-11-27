@@ -8,14 +8,13 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.example.mgd.CarMgd;
-import org.example.model.Car;
+import org.example.mgd.vehicle.CarMgd;
+import org.example.model.vehicle.Car;
 import org.example.redis.RedisConnectionManager;
 import org.example.repositories.mongo.implementations.VehicleRepository;
 import org.example.utils.consts.DatabaseConstants;
-import org.junit.jupiter.api.*;
 import org.openjdk.jmh.annotations.*;
-import org.slf4j.LoggerFactory;
+import redis.clients.jedis.JedisPooled;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,8 +35,6 @@ public class BenchmarkTest {
     public static MongoClient client;
 
     public static void connect() {
-
-
         ConnectionString connectionString = new ConnectionString(DatabaseConstants.connectionString);
 
         MongoCredential credential = MongoCredential.createCredential("admin", "admin", "adminpassword".toCharArray());
@@ -67,18 +64,19 @@ public class BenchmarkTest {
     private UUID idMongo;
     private UUID idRedis;
 
-    private String plateNumberMongo = "HJ56G7";
-    private String plateNumberRedis = "HJ56G8";
+    private final String plateNumberMongo = "HJ56G7";
+    private final String plateNumberRedis = "HJ56G8";
+    private JedisPooled pool;
 
     @Setup(Level.Invocation)
     public void setUp() {
         connect();
-//        client = MongoClients.create(settings);
-//        client.getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
         redisRepo = new VehicleRepositoryDecorator(client);
         mongoRepo = new VehicleRepository(client);
         client.getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
-        redisRepo.clearCache();
+        pool = RedisConnectionManager.getConnection();
+        assert pool != null;
+        redisRepo.clearCache(pool);
         idMongo = UUID.randomUUID();
         Car car = new Car(idMongo, plateNumberMongo, 100.0, 30, Car.TransmissionType.AUTOMATIC);
         mongoRepo.save(new CarMgd(car));
@@ -90,14 +88,15 @@ public class BenchmarkTest {
 
     @TearDown(Level.Invocation)
     public  void tearDown() {
-       // RedisConnectionManager.close();
+        RedisConnectionManager.close();
+        redisRepo = null;
     }
 
     @Benchmark
     public void saveVehicleRedis() {
         Car car = new Car(UUID.randomUUID(), "HJ56G7", 100.0, 30, Car.TransmissionType.AUTOMATIC);
         String redisKey = DatabaseConstants.VEHICLE_PREFIX + car.getId();
-        redisRepo.saveToCache(redisKey, new CarMgd(car));
+        redisRepo.saveToCache(redisKey, new CarMgd(car), pool);
     }
 
     @Benchmark
@@ -113,7 +112,7 @@ public class BenchmarkTest {
 
     @Benchmark
     public void findAllRedis() {
-        redisRepo.getAllFromCache();
+        redisRepo.getAllFromCache(pool);
     }
 
     @Benchmark
@@ -123,7 +122,7 @@ public class BenchmarkTest {
 
     @Benchmark
     public void findByIdNotInCache() {
-        redisRepo.clearCache();
+        redisRepo.clearCache(pool);
         redisRepo.findById(idMongo);
     }
 
@@ -134,7 +133,7 @@ public class BenchmarkTest {
 
     @Benchmark
     public void findByPlateNumberNotInCache() {
-        redisRepo.clearCache();
+        redisRepo.clearCache(pool);
         redisRepo.findByPlateNumber(plateNumberMongo);
     }
 
@@ -150,6 +149,6 @@ public class BenchmarkTest {
 
     @Benchmark
     public void findByPlateNumberRedis() {
-        redisRepo.getFromCacheByPlateNumber(plateNumberRedis);
+        redisRepo.getFromCacheByPlateNumber(plateNumberRedis, pool);
     }
 }

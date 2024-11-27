@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.example.mgd.ClientMgd;
+import org.example.model.clientType.ClientType;
 
 import java.util.ArrayList;
 import java.util.List;

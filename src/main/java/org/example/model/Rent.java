@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.example.mgd.RentMgd;
+import org.example.model.vehicle.Vehicle;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

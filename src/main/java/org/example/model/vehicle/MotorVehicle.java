@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.model.vehicle;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

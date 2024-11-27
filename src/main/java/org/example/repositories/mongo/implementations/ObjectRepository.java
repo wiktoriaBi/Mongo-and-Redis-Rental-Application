@@ -9,6 +9,8 @@ import lombok.Getter;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.conversions.Bson;
 import org.example.mgd.*;
+import org.example.mgd.clientType.ClientTypeMgd;
+import org.example.mgd.vehicle.VehicleMgd;
 import org.example.repositories.mongo.interfaces.IObjectRepository;
 import org.example.utils.consts.DatabaseConstants;
 

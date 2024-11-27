@@ -8,8 +8,8 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.example.mgd.MopedMgd;
-import org.example.model.Moped;
+import org.example.mgd.vehicle.MopedMgd;
+import org.example.model.vehicle.Moped;
 import org.example.repositories.mongo.implementations.VehicleRepository;
 
 import org.example.repositories.mongo.interfaces.IVehicleRepository;

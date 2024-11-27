@@ -7,7 +7,6 @@ import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.exceptions.JedisException;
 
 import java.io.IOException;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -48,8 +47,12 @@ public class RedisConnectionManager {
     }
 
     public static JedisPooled getConnection() {
-        if (jedisPooled == null) {
-            throw new IllegalStateException("Połączenie z Redis nie zostało zainicjalizowane.");
+        try{
+            connect();
+            jedisPooled.getPool().getResource();
+        }
+        catch (JedisException e) {
+            return null;
         }
         return jedisPooled;
     }

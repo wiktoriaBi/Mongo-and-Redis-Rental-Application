@@ -8,29 +8,26 @@ import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.example.mgd.BicycleMgd;
-import org.example.mgd.CarMgd;
-import org.example.mgd.MopedMgd;
-import org.example.mgd.VehicleMgd;
-import org.example.model.Bicycle;
-import org.example.model.Car;
-import org.example.model.Moped;
+import org.example.mgd.vehicle.BicycleMgd;
+import org.example.mgd.vehicle.CarMgd;
+import org.example.mgd.vehicle.MopedMgd;
+import org.example.mgd.vehicle.VehicleMgd;
+import org.example.model.vehicle.Bicycle;
+import org.example.model.vehicle.Car;
+import org.example.model.vehicle.Moped;
 import org.example.redis.RedisConnectionManager;
 import org.example.utils.consts.DatabaseConstants;
 import org.junit.jupiter.api.*;
 import redis.clients.jedis.JedisPooled;
-import redis.clients.jedis.json.DefaultGsonObjectMapper;
-import redis.clients.jedis.json.JsonObjectMapper;
 
 import java.util.List;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
+import java.util.concurrent.TimeUnit;
 
 class VehicleRepositoryDecoratorTest {
 
     VehicleRepositoryDecorator repo;
-
+    JedisPooled pool;
     private static MongoClient client;
 
     @BeforeAll
@@ -64,12 +61,13 @@ class VehicleRepositoryDecoratorTest {
     @BeforeEach
     void setUp() {
         repo = new VehicleRepositoryDecorator(client);
+        pool = RedisConnectionManager.getConnection();
         client.getDatabase(DatabaseConstants.DATABASE_NAME).getCollection(DatabaseConstants.VEHICLE_COLLECTION_NAME).drop();
-        repo.clearCache();
+        repo.clearCache(pool);
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    static void tearDown() {
         RedisConnectionManager.close();
     }
 
@@ -92,69 +90,6 @@ class VehicleRepositoryDecoratorTest {
         repo.save(new CarMgd(car2));
         List<VehicleMgd> all = repo.findAll();
         Assertions.assertEquals(2, all.size());
-    }
-
-    @Test
-    void getFromCacheByPlateNumber() {
-        Bicycle bicycle = new Bicycle(UUID.randomUUID(), "DE1298", 20.0, 2);
-        repo.save(new BicycleMgd(bicycle));
-        Assertions.assertEquals(bicycle.getId(), repo.getFromCacheByPlateNumber(bicycle.getPlateNumber()).getId());
-        Assertions.assertEquals(1, repo.findAll().size());
-    }
-
-    @Test
-    void clearCache() {
-        Moped moped = new Moped(UUID.randomUUID(), "KJF5TY", 200.0, 3000);
-        repo.save(new MopedMgd(moped));
-        Assertions.assertNotNull(repo.findById(moped.getId()));
-        repo.clearCache();
-        String redisKey = DatabaseConstants.VEHICLE_PREFIX + moped.getId();
-        Assertions.assertThrows(RuntimeException.class, () -> repo.getFromCache(redisKey));
-    }
-
-    @Test
-    void saveToGetFromCache() {
-        Car car = new Car(UUID.randomUUID(), "HJ56G7", 100.0, 30, Car.TransmissionType.AUTOMATIC);
-        String redisKey = DatabaseConstants.VEHICLE_PREFIX + car.getId();
-        repo.saveToCache(redisKey, new CarMgd(car));
-        Assertions.assertEquals(car.getId(), repo.getFromCache(redisKey).getId());
-    }
-
-    @Test
-    void getAllFromCache() {
-        Car car = new Car(UUID.randomUUID(), "FA6G78", 300.0, 200, Car.TransmissionType.AUTOMATIC);
-        repo.save(new CarMgd(car));
-        Moped moped = new Moped(UUID.randomUUID(), "JL6739", 700.0, 5000);
-        repo.save(new MopedMgd(moped));
-        Assertions.assertEquals(2, repo.getAllFromCache().size());
-        Assertions.assertEquals(car.getId(), repo.getAllFromCache().get(0).getId());
-        Assertions.assertEquals(moped.getId(), repo.getAllFromCache().get(1).getId());
-    }
-
-    @Test
-    void getAllFromCacheByDiscriminator() {
-        Bicycle bicycle = new Bicycle(UUID.randomUUID(), "EL78G6", 20.0, 2);
-        repo.save(new BicycleMgd(bicycle));
-        Car car = new Car(UUID.randomUUID(), "SK76G6", 300.0, 200, Car.TransmissionType.AUTOMATIC);
-        repo.save(new CarMgd(car));
-        Assertions.assertEquals(1, repo.getAllFromCacheByDiscriminator(DatabaseConstants.CAR_DISCRIMINATOR).size());
-        Assertions.assertEquals(car.getId(), repo.getAllFromCacheByDiscriminator(DatabaseConstants.CAR_DISCRIMINATOR).getFirst().getId());
-
-        Assertions.assertEquals(1, repo.getAllFromCacheByDiscriminator(DatabaseConstants.BICYCLE_DISCRIMINATOR).size());
-        Assertions.assertEquals(bicycle.getId(), repo.getAllFromCacheByDiscriminator(DatabaseConstants.BICYCLE_DISCRIMINATOR).getFirst().getId());
-
-        Assertions.assertEquals(0, repo.getAllFromCacheByDiscriminator(DatabaseConstants.MOPED_DISCRIMINATOR).size());
-    }
-
-    @Test
-    void deleteFromCache(){
-        Moped moped = new Moped(UUID.randomUUID(), "NW898J", 100.0, 1000);
-        repo.save(new MopedMgd(moped));
-        Assertions.assertNotNull(repo.findById(moped.getId()));
-        String redisKey = DatabaseConstants.VEHICLE_PREFIX + moped.getId();
-        repo.deleteFromCache(redisKey);
-        Assertions.assertThrows(RuntimeException.class, () -> repo.getFromCache(redisKey));
-        Assertions.assertEquals(0, repo.getAllFromCache().size());
     }
 
     @Test
@@ -195,12 +130,13 @@ class VehicleRepositoryDecoratorTest {
 
     @Test
     void changeRentedStatus() {
-        Car car = new Car(UUID.randomUUID(), "DJ67F5", 350.0, 2000, Car.TransmissionType.AUTOMATIC);
+        UUID carId= UUID.randomUUID();
+        Car car = new Car(carId, "DJ67F5", 350.0, 2000, Car.TransmissionType.AUTOMATIC);
         repo.save(new CarMgd(car));
         String redisKey = DatabaseConstants.VEHICLE_PREFIX + car.getId();
-        Assertions.assertEquals(0, repo.getFromCache(redisKey).getRented());
+        Assertions.assertEquals(0, repo.findById(carId).getRented());
         repo.changeRentedStatus(car.getId(), true);
-        Assertions.assertEquals(1, repo.getFromCache(redisKey).getRented());
+        Assertions.assertEquals(1, repo.findById(carId).getRented());
     }
 
     @Test

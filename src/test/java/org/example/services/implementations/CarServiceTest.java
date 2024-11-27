@@ -2,8 +2,8 @@ package org.example.services.implementations;
 
 import org.example.commons.dto.create.CarCreateDTO;
 import org.example.commons.dto.update.CarUpdateDTO;
-import org.example.model.Car;
-import org.example.model.Vehicle;
+import org.example.model.vehicle.Car;
+import org.example.model.vehicle.Vehicle;
 
 import org.example.services.interfaces.IVehicleService;
 import org.example.utils.consts.DatabaseConstants;
