@@ -40,10 +40,10 @@ The system allows for:
 
 ### Setup
 - Clone this repository.
-- Set up MongoDB replica set and Redis by running services directly from docker-compose using IDE or by executing ***docker-compose up -d*** command.
+- Set up MongoDB replica set and Redis by running services directly from docker-compose using IDE or by executing ```docker-compose up -d``` command.
 
 ### Testing
-- Run all **JUnit** tests using: ***mvn test*** or use your IDE to run tests. 
+- Run all **JUnit** tests using: ```mvn test``` or use your IDE to run tests. 
 - To run a Benchmark test go to **BenchmarkTest** class using your IDE and run test.
 
 ## Performance Benchmarks
